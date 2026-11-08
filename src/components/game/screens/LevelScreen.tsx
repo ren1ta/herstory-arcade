@@ -1,12 +1,17 @@
+import { useEffect, useState } from "react";
 import type { Level, ChoiceKey } from "@/game/story";
 import type { Avatar } from "@/game/avatars";
 import { useTypewriter } from "@/game/useTypewriter";
 import { useHotkeys } from "@/game/useHotkeys";
 import { playSound } from "@/game/audio";
+import { PixelButton } from "../PixelButton";
 import { PixelWindow } from "../PixelWindow";
 import { AvatarSprite } from "../AvatarSprite";
 
 const KEY_MAP: Record<string, ChoiceKey> = { a: "A", b: "B", "1": "A", "2": "B" };
+const AVATAR_DIALOGUE_MS = 5000;
+
+type DialoguePhase = "npc" | "avatar" | "choice";
 
 interface LevelScreenProps {
   level: Level;
@@ -15,67 +20,131 @@ interface LevelScreenProps {
 }
 
 export function LevelScreen({ level, avatar, onChoose }: LevelScreenProps) {
-  const typed = useTypewriter(`${level.system}\n> ${level.scene}`, 22);
+  const [phase, setPhase] = useState<DialoguePhase>("npc");
+  const [lineIndex, setLineIndex] = useState(0);
+  const npcTyped = useTypewriter(level.npc.lines[lineIndex] ?? "", 28);
+  const avatarTyped = useTypewriter(phase === "avatar" ? level.npc.response : "", 25);
 
-  useHotkeys((key) => {
-    if (!typed.done) {
-      if (key === "enter" || key === " ") typed.skip();
+  useEffect(() => {
+    if (phase !== "avatar") return;
+    const timer = window.setTimeout(() => setPhase("choice"), AVATAR_DIALOGUE_MS);
+    return () => window.clearTimeout(timer);
+  }, [phase, level.id]);
+
+  const advanceNpc = () => {
+    if (!npcTyped.done) {
+      npcTyped.skip();
       return;
     }
-    const choice = KEY_MAP[key];
-    if (choice) {
-      playSound("click");
-      onChoose(choice);
+    if (lineIndex < level.npc.lines.length - 1) {
+      setLineIndex((current) => current + 1);
+      playSound("blip");
+      return;
+    }
+    setPhase("avatar");
+  };
+
+  useHotkeys((key) => {
+    if (phase === "npc" && (key === "enter" || key === " ")) {
+      advanceNpc();
+      return;
+    }
+    if (phase === "choice") {
+      const choice = KEY_MAP[key];
+      if (choice) {
+        playSound("click");
+        onChoose(choice);
+      }
     }
   });
 
   return (
-    <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,220px)_1fr]">
-      <div className="hidden h-64 justify-center lg:sticky lg:top-6 lg:mt-24 lg:flex">
-        <div className="animate-idle-bob h-full">
-          <AvatarSprite avatar={avatar} alt={`${avatar.name} ready for action`} className="h-full drop-shadow-[6px_6px_0_var(--ink)]" />
+    <div className="mx-auto grid w-full max-w-5xl gap-4">
+      <div className="pixel-frame relative flex min-h-56 items-end justify-between overflow-hidden bg-lavender-night/50 px-8 pt-5 sm:min-h-72 sm:px-16">
+        <div className="animate-idle-bob h-40 sm:h-56">
+          <AvatarSprite
+            avatar={avatar}
+            alt={`${avatar.name}, in ${level.place}`}
+            className="h-full drop-shadow-[5px_5px_0_var(--ink)]"
+          />
+        </div>
+        <div className="flex h-40 items-end sm:h-56">
+          <img
+            src={level.npc.sprite}
+            alt={level.npc.name}
+            width={250}
+            height={250}
+            draggable={false}
+            className="h-full w-auto object-contain drop-shadow-[5px_5px_0_var(--ink)] [image-rendering:pixelated]"
+            style={{ filter: "url(#remove-npc-magenta)" }}
+          />
+        </div>
+        <svg className="absolute h-0 w-0" aria-hidden>
+          <defs>
+            <filter id="remove-npc-magenta">
+              <feColorMatrix
+                type="matrix"
+                values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  -0.8 1.6 -0.8 0 1"
+              />
+            </filter>
+          </defs>
+        </svg>
+        <div className="absolute top-3 left-3 bg-ink/80 px-2 py-1 font-pixel text-[8px] text-neon-gold sm:text-[10px]">
+          {level.place} · {level.year}
         </div>
       </div>
 
       <PixelWindow title={`LEVEL ${level.id} — ${level.stage} · AGE ${level.age}`} className="w-full">
-        <div className="flex flex-wrap items-baseline justify-between gap-2">
-          <h1 className="font-pixel text-sm text-lavender-deep sm:text-base">{level.place}</h1>
-          <span className="font-pixel bg-lavender-deep px-2 py-1 text-[9px] text-neon-gold">{level.year}</span>
-        </div>
+        {phase === "npc" && (
+          <button
+            type="button"
+            onClick={advanceNpc}
+            className="pixel-frame block min-h-28 w-full bg-ink px-4 py-3 text-left"
+            aria-label="Advance NPC dialogue"
+          >
+            <p className="font-pixel text-[10px] text-neon-gold">{level.npc.name}</p>
+            <p className="font-terminal mt-2 min-h-14 whitespace-pre-wrap text-2xl leading-snug text-cream sm:text-3xl">
+              {npcTyped.shown}
+              {!npcTyped.done && <span className="animate-blink text-neon-pink">█</span>}
+            </p>
+            <p className="font-pixel mt-2 text-[8px] text-neon-cyan">
+              {npcTyped.done ? "CLICK OR PRESS ENTER TO CONTINUE ▶" : "CLICK OR PRESS ENTER TO FINISH LINE"}
+            </p>
+          </button>
+        )}
 
-        <button
-          type="button"
-          onClick={typed.skip}
-          className="pixel-frame mt-4 block min-h-24 w-full bg-ink px-4 py-3 text-left"
-          aria-label="Skip typing"
-        >
-          <pre className="font-terminal whitespace-pre-wrap text-2xl leading-snug text-neon-cyan sm:text-[1.7rem]">
-            {typed.shown}
-            <span className="animate-blink text-neon-pink">█</span>
-          </pre>
-        </button>
+        {phase === "avatar" && (
+          <div className="pixel-frame animate-pop-in min-h-28 bg-lavender-night px-4 py-3">
+            <p className="font-pixel text-[10px] text-neon-pink">{avatar.name}</p>
+            <p className="font-terminal mt-2 min-h-14 whitespace-pre-wrap text-2xl leading-snug text-cream sm:text-3xl">
+              {avatarTyped.shown}
+              {!avatarTyped.done && <span className="animate-blink text-neon-cyan">█</span>}
+            </p>
+          </div>
+        )}
 
-        {typed.done && (
+        {phase === "choice" && (
           <div className="animate-pop-in">
-            <p className="font-pixel mt-6 text-[10px] text-lavender-deep">
+            <p className="font-pixel text-[10px] text-lavender-deep">
               ▼ WHAT WILL YOU DO? <span className="text-ink/60">(press A or B)</span>
             </p>
             <ul className="mt-3 space-y-3">
-              {level.choices.map((c) => (
-                <li key={c.key}>
-                  <button
-                    type="button"
+              {level.choices.map((choice) => (
+                <li key={choice.key}>
+                  <PixelButton
+                    variant="pink"
+                    size="md"
+                    className="w-full justify-start gap-4 whitespace-normal text-left"
                     onClick={() => {
                       playSound("click");
-                      onChoose(c.key);
+                      onChoose(choice.key);
                     }}
-                    className="pixel-frame group flex w-full items-center gap-4 bg-cream px-3 py-3 text-left transition-transform hover:translate-x-1 hover:bg-pastel-pink focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-neon-cyan"
                   >
-                    <span className="font-pixel flex h-10 w-10 shrink-0 items-center justify-center bg-neon-pink text-sm text-cream pixel-text-shadow group-hover:bg-lavender-deep">
-                      {c.key}
+                    <span className="font-pixel flex h-10 w-10 shrink-0 items-center justify-center bg-lavender-deep text-sm text-cream">
+                      {choice.key}
                     </span>
-                    <span className="font-terminal flex-1 text-xl leading-tight sm:text-2xl">{c.label}</span>
-                  </button>
+                    <span className="font-terminal flex-1 text-xl leading-tight sm:text-2xl">{choice.label}</span>
+                  </PixelButton>
                 </li>
               ))}
             </ul>

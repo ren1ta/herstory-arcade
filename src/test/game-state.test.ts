@@ -45,7 +45,17 @@ describe("game rules", () => {
     for (const l of LEVELS) {
       expect(l.choices.filter((c) => c.bold)).toHaveLength(1);
       expect(l.choices.filter((c) => !c.bold)).toHaveLength(1);
+      expect(l.background).toBeTruthy();
+      expect(l.npc.name).toBeTruthy();
+      expect(l.npc.sprite).toBeTruthy();
+      expect(l.npc.lines.length).toBeGreaterThan(0);
+      expect(l.npc.response).toBeTruthy();
     }
+    expect(new Set(LEVELS.map((l) => l.background)).size).toBe(LEVELS.length);
+  });
+
+  it("uses the requested year for the 1985 media level", () => {
+    expect(LEVELS.find((level) => level.id === "2.1")?.year).toBe("1985");
   });
 
   it("a wrong choice triggers GAME OVER and RETRY replays the same level", () => {
@@ -71,6 +81,18 @@ describe("game rules", () => {
     s = gameReducer(s, { type: "LEAVE_HOME" });
     expect(s.screen).toBe("actIntro");
     expect(LEVELS[s.levelIndex]!.id).toBe("2.1");
+  });
+
+  it("stopping at an act intermission opens the journey summary", () => {
+    let s = toFirstLevel();
+    for (let i = 0; i < 4; i++) {
+      s = gameReducer(s, { type: "CHOOSE", choice: boldKey(i) });
+      s = gameReducer(s, { type: "CONTINUE" });
+    }
+    expect(s.screen).toBe("home");
+    s = gameReducer(s, { type: "STOP_AT_HOME" });
+    expect(s.screen).toBe("summary");
+    expect(countStars(s)).toBe(4);
   });
 
   it("clearing all 12 levels reaches victory with 12 stars and 3 hearts", () => {

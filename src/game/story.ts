@@ -1,11 +1,26 @@
-import toyStore from "@/assets/scene-1950s-toy-store.jpg";
-import suffrageStreet from "@/assets/level-1.jpg";
-import lab1950s from "@/assets/scene-1950s-lab.jpg";
-import office1970s from "@/assets/level-2.jpg";
-import bedroom1980s from "@/assets/scene-1980s-bedroom.jpg";
-import punkVenue from "@/assets/level-3.jpg";
-import summit1999 from "@/assets/scene-1999-summit.jpg";
-import digitalSphere from "@/assets/level-4.jpg";
+import toyStore from "@/assets/Screenshot 2026-11-08 at 3.10.24 PM 3.png";
+import suffrageStreet from "@/assets/Screenshot 2026-11-08 at 3.19.03 PM.png";
+import lab1950s from "@/assets/Screenshot 2026-11-08 at 3.19.41 PM.png";
+import office1970s from "@/assets/Screenshot 2026-11-08 at 3.20.22 PM.png";
+import livingRoom1985 from "@/assets/Screenshot 2026-11-08 at 3.21.02 PM.png";
+import punkVenue from "@/assets/Screenshot 2026-11-08 at 3.21.40 PM.png";
+import summit1999 from "@/assets/Screenshot 2026-11-08 at 3.22.30 PM.png";
+import boardroom from "@/assets/Screenshot 2026-11-08 at 3.23.07 PM.png";
+import computerLab from "@/assets/Screenshot 2026-11-08 at 3.23.42 PM.png";
+import campus from "@/assets/Screenshot 2026-11-08 at 3.24.13 PM.png";
+import aiLab from "@/assets/Screenshot 2026-11-08 at 3.27.22 PM.png";
+import summitStage from "@/assets/Screenshot 2026-11-08 at.png";
+import toyShopkeeper from "@/assets/toy shopkeeper.png";
+import bystander from "@/assets/bystander.png";
+import maleScientist from "@/assets/male scientist.png";
+import bankManager from "@/assets/corporate ceo.png";
+import venueOwner from "@/assets/music venue owner.png";
+import summitPanelist from "@/assets/summit panelist.png";
+import corporateCeo from "@/assets/corporate ceo.png";
+import codingTeacher from "@/assets/computer lab teacher.png";
+import universityDean from "@/assets/college dean.png";
+import techLead from "@/assets/tech lead.png";
+import keynoteSpeaker from "@/assets/keynote speaker'.png";
 
 export type ChoiceKey = "A" | "B";
 export type LifeStage = "CHILDHOOD" | "YOUTH" | "ADULTHOOD" | "MATURITY";
@@ -16,6 +31,13 @@ export interface Choice {
   label: string;
   /** The bold, progressive option clears the level; the other triggers GAME OVER. */
   bold: boolean;
+}
+
+export interface NpcInteraction {
+  name: string;
+  sprite: string;
+  lines: string[];
+  response: string;
 }
 
 export interface Act {
@@ -42,9 +64,85 @@ export interface Level {
   gameOverTitle: string;
   gameOverText: string;
   background: string;
+  npc: NpcInteraction;
   /** Optional CSS filter so reused scenes feel different. */
   tint?: string;
 }
+
+const NPC = {
+  toyShopkeeper: {
+    name: "1950s SHOPKEEPER",
+    sprite: toyShopkeeper,
+    lines: ["Kitchen sets are over here for girls.", "The rocket kits are really meant for boys."],
+    response: "I shouldn't have to choose between what I like and what people expect of me.",
+  },
+  suffrageActivist: {
+    name: "1910s BYSTANDER",
+    sprite: bystander,
+    lines: ["The march is getting louder.", "Will you stand with us and demand the vote?"],
+    response: "Their voices deserve to be heard—and I can add mine to the march.",
+  },
+  labSupervisor: {
+    name: "MALE LAB SUPERVISOR",
+    sprite: maleScientist,
+    lines: ["Your results are impressive.", "I'll present the discovery under my name."],
+    response: "My work and my name belong together. I won't let this discovery be taken from me.",
+  },
+  bankManager: {
+    name: "1974 BANK MANAGER",
+    sprite: bankManager,
+    lines: ["Your business plan looks solid.", "I'm afraid I still need your husband's signature."],
+    response: "My finances are my own. This rule must change for every woman who comes after me.",
+  },
+  tvAnnouncer: {
+    name: "TV ANNOUNCER",
+    sprite: bystander,
+    lines: ["And now, another story about a princess waiting to be rescued.", "That's the only kind of story kids want to see, right?"],
+    response: "Stories can show girls solving problems and saving the day, too.",
+  },
+  venueOwner: {
+    name: "VENUE OWNER",
+    sprite: venueOwner,
+    lines: ["The main stage is booked.", "You and the other women can hand out flyers at the door."],
+    response: "If this stage has no room for us, we'll make our own—and bring everyone with us.",
+  },
+  summitPanelist: {
+    name: "SUMMIT PANELIST",
+    sprite: summitPanelist,
+    lines: ["Let's discuss what women experience.", "We don't need to get into race or class today."],
+    response: "Race, class, and gender can overlap. We need to hear from people at those crossroads.",
+  },
+  corporateCeo: {
+    name: "CORPORATE CEO",
+    sprite: corporateCeo,
+    lines: ["The promotion is going to someone else.", "He just feels like a better fit for the team."],
+    response: "Let's examine the evidence. Fair pay and promotion need transparent standards.",
+  },
+  codingTeacher: {
+    name: "CODING TEACHER",
+    sprite: codingTeacher,
+    lines: ["Boys, take the coding challenge.", "Girls, why don't you choose the background colours?"],
+    response: "I want to solve the coding challenge, too. Programming belongs to everyone.",
+  },
+  universityDean: {
+    name: "UNIVERSITY DEAN",
+    sprite: universityDean,
+    lines: ["We should keep these reports private.", "Please sign this agreement so the university can move on."],
+    response: "Silence protects the institution, not students. We need accountability and change.",
+  },
+  techLead: {
+    name: "TECH LEAD",
+    sprite: techLead,
+    lines: ["The hiring model is ready to ship.", "It scores applicants lower when their CV mentions a women's college."],
+    response: "A deadline can't excuse discrimination. We need to audit the data and fix the bias first.",
+  },
+  keynoteSpeaker: {
+    name: "KEYNOTE SPEAKER",
+    sprite: keynoteSpeaker,
+    lines: ["Technology has completely solved gender bias!", "There's nothing left to fix—let's celebrate."],
+    response: "Equality isn't finished. We need digital rights, fair technology, and action that continues.",
+  },
+} satisfies Record<string, NpcInteraction>;
 
 export const ACTS: Act[] = [
   {
@@ -95,6 +193,7 @@ export const LEVELS: Level[] = [
     gameOverText:
       "You take the stove. It's a fine toy — but the message sticks: science is 'for boys'. Toys that tell children what they're supposed to like can quietly shrink their dreams.",
     background: toyStore,
+    npc: NPC.toyShopkeeper,
   },
   {
     id: "1.2",
@@ -123,6 +222,7 @@ export const LEVELS: Level[] = [
     gameOverText:
       "You slip away. The hecklers get louder and the march gets smaller. Rights are rarely handed out — they were won by ordinary people who stood up when it was scary.",
     background: suffrageStreet,
+    npc: NPC.suffrageActivist,
   },
   {
     id: "1.3",
@@ -147,6 +247,7 @@ export const LEVELS: Level[] = [
     gameOverText:
       "He takes the stage and the credit. For centuries, women's discoveries were filed under men's names — and history forgot who really did the work.",
     background: lab1950s,
+    npc: NPC.labSupervisor,
   },
   {
     id: "1.4",
@@ -171,6 +272,7 @@ export const LEVELS: Level[] = [
     gameOverText:
       "You get the loan — but the rule survives, and so does the idea that a woman's money needs a man's permission. The next woman in line hits the same wall.",
     background: office1970s,
+    npc: NPC.bankManager,
   },
 
   // ---------------- ACT II ----------------
@@ -179,7 +281,7 @@ export const LEVELS: Level[] = [
     act: 2,
     stage: "CHILDHOOD",
     age: 8,
-    year: "1980s",
+    year: "1985",
     place: "Saturday Morning Cartoons",
     system: "[SYSTEM: 1985 · SATURDAY MORNING CARTOONS]",
     scene:
@@ -200,7 +302,8 @@ export const LEVELS: Level[] = [
     gameOverTitle: "DAMSEL MODE: ON",
     gameOverText:
       "You keep watching. When every story shows girls waiting to be saved, kids start to believe it. Media shapes what we imagine is possible.",
-    background: bedroom1980s,
+    background: livingRoom1985,
+    npc: NPC.tvAnnouncer,
   },
   {
     id: "2.2",
@@ -229,6 +332,7 @@ export const LEVELS: Level[] = [
     gameOverText:
       "You hand out flyers for bands who won't share the stage. When women only get supporting roles, the whole scene loses half its voices.",
     background: punkVenue,
+    npc: NPC.venueOwner,
   },
   {
     id: "2.3",
@@ -257,6 +361,7 @@ export const LEVELS: Level[] = [
     gameOverText:
       "You stay quiet and the summit moves on. Women facing racism, poverty and sexism all at once are left out of the plan — again.",
     background: summit1999,
+    npc: NPC.summitPanelist,
   },
   {
     id: "2.4",
@@ -284,7 +389,8 @@ export const LEVELS: Level[] = [
     gameOverTitle: "CEILING HOLDS",
     gameOverText:
       "You stay put. The gap stays too — and grows every year in pay, pension and power. Unfair systems keep running until someone audits them.",
-    background: office1970s,
+    background: boardroom,
+    npc: NPC.corporateCeo,
     tint: "hue-rotate(200deg) saturate(0.85)",
   },
 
@@ -315,7 +421,8 @@ export const LEVELS: Level[] = [
     gameOverTitle: "SYNTAX ERROR",
     gameOverText:
       "You pick the colours while others learn to code. Small moments like this add up — women are still far fewer in tech jobs today.",
-    background: digitalSphere,
+    background: computerLab,
+    npc: NPC.codingTeacher,
     tint: "hue-rotate(70deg)",
   },
   {
@@ -344,7 +451,8 @@ export const LEVELS: Level[] = [
     gameOverTitle: "SILENCE SIGNED",
     gameOverText:
       "The agreement keeps the story secret — and keeps the problem alive. Breaking the silence helps survivors know they are not alone.",
-    background: digitalSphere,
+    background: campus,
+    npc: NPC.universityDean,
     tint: "hue-rotate(-45deg) saturate(1.2)",
   },
   {
@@ -373,7 +481,8 @@ export const LEVELS: Level[] = [
     gameOverTitle: "BIAS DEPLOYED",
     gameOverText:
       "The tool ships and thousands of qualified women are quietly filtered out. AI learns from old data — and old data carries old prejudice.",
-    background: digitalSphere,
+    background: aiLab,
+    npc: NPC.techLead,
     tint: "hue-rotate(150deg) saturate(1.3)",
   },
   {
@@ -402,7 +511,8 @@ export const LEVELS: Level[] = [
     gameOverTitle: "COMPLACENCY LOOP",
     gameOverText:
       "Everyone claps and moves on. When people believe a problem is solved, they stop fixing it. Equality needs updates, just like technology.",
-    background: digitalSphere,
+    background: summitStage,
+    npc: NPC.keynoteSpeaker,
   },
 ];
 

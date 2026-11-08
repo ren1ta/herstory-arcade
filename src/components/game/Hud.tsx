@@ -17,6 +17,9 @@ export function Hud({ avatar, hearts, totalHearts, stars, maxStars, levelLabel }
 
   return (
     <div className="pixel-frame flex flex-wrap items-center gap-x-5 gap-y-3 bg-lavender-night/90 px-3 py-2 text-cream">
+      <p className="w-full font-pixel text-center text-[8px] text-neon-cyan sm:text-left">
+        WALK A MILE IN HER SHOES
+      </p>
       <div className="flex items-center gap-2">
         <div className="pixel-frame relative h-12 w-12 overflow-hidden bg-pastel-pink">
           <AvatarSprite
@@ -52,7 +55,7 @@ export function Hud({ avatar, hearts, totalHearts, stars, maxStars, levelLabel }
       </div>
 
       <div className="flex min-w-40 flex-1 items-center gap-2">
-        <span className="font-pixel text-[8px] text-muted-foreground">EQUALITY</span>
+        <span className="font-pixel text-[8px] text-muted-foreground">JOURNEY</span>
         <div
           className="flex h-5 flex-1 gap-[3px] bg-ink p-[3px] shadow-[0_0_0_3px_var(--cream)]"
           role="progressbar"

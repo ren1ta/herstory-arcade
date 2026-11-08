@@ -4,13 +4,13 @@ import { Game } from "@/components/game/Game";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "8-BIT EQUALITY — Walk A Mile In Her Shoes" },
+      { title: "Walk A Mile In Her Shoes — 8-Bit Equality" },
       {
         name: "description",
         content:
           "A retro pixel story game: three timelines, four life stages each, one bold choice at a time.",
       },
-      { property: "og:title", content: "8-BIT EQUALITY — Walk A Mile In Her Shoes" },
+      { property: "og:title", content: "Walk A Mile In Her Shoes — 8-Bit Equality" },
       {
         property: "og:description",
         content:

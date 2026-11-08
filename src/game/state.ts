@@ -11,6 +11,7 @@ export type Screen =
   | "cleared"
   | "gameover"
   | "home"
+  | "summary"
   | "victory";
 
 export interface GameState {
@@ -35,6 +36,7 @@ export type GameAction =
   | { type: "RETRY" }
   | { type: "CONTINUE" }
   | { type: "LEAVE_HOME" }
+  | { type: "STOP_AT_HOME" }
   | { type: "RESET" };
 
 export const TOTAL_LEVELS = LEVELS.length;
@@ -95,6 +97,8 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
       return state.screen === "home"
         ? { ...state, screen: "actIntro", levelIndex: state.levelIndex + 1, lastChoice: null }
         : state;
+    case "STOP_AT_HOME":
+      return state.screen === "home" ? { ...state, screen: "summary" } : state;
     case "RESET":
       return initialState();
     default:
