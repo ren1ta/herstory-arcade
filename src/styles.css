@@ -364,3 +364,31 @@
     animation: none;
   }
 }
+
+/* Synthwave floor grid + starfield for the title screen. */
+@utility synth-grid {
+  background-image:
+    linear-gradient(var(--neon-pink) 2px, transparent 2px),
+    linear-gradient(90deg, var(--neon-pink) 2px, transparent 2px);
+  background-size: 48px 48px;
+  transform: perspective(300px) rotateX(60deg);
+  transform-origin: center top;
+  mask-image: linear-gradient(to bottom, transparent, black 40%);
+  animation: grid-scroll 1.2s linear infinite;
+}
+
+@utility starfield {
+  background-image:
+    radial-gradient(2px 2px at 10% 20%, var(--cream), transparent),
+    radial-gradient(2px 2px at 30% 70%, var(--neon-cyan), transparent),
+    radial-gradient(2px 2px at 55% 15%, var(--cream), transparent),
+    radial-gradient(2px 2px at 75% 40%, var(--neon-gold), transparent),
+    radial-gradient(2px 2px at 90% 10%, var(--cream), transparent),
+    radial-gradient(2px 2px at 65% 60%, var(--pastel-pink), transparent),
+    radial-gradient(2px 2px at 20% 45%, var(--pastel-pink), transparent);
+  animation: blink 2.4s steps(1) infinite;
+}
+
+@keyframes grid-scroll {
+  to { background-position: 0 48px, 0 0; }
+}

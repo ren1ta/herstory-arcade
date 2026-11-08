@@ -10,6 +10,8 @@ export interface GameState {
   /** Paths explored per level index. Each new path earns one star. */
   explored: ChoiceKey[][];
   lastChoice: ChoiceKey | null;
+  /** True when the last choice explored a path for the first time (earned a star). */
+  lastWasNew: boolean;
 }
 
 export type GameAction =
@@ -32,6 +34,7 @@ export function initialState(): GameState {
     levelIndex: 0,
     explored: LEVELS.map(() => []),
     lastChoice: null,
+    lastWasNew: false,
   };
 }
 
@@ -46,16 +49,24 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
     case "CHOOSE": {
       if (state.screen !== "level") return state;
       const current = state.explored[state.levelIndex];
-      const explored = current.includes(action.choice)
+      const isNew = !current.includes(action.choice);
+      const explored = !isNew
         ? state.explored
         : state.explored.map((list, i) =>
             i === state.levelIndex ? [...list, action.choice] : list,
           );
-      return { ...state, explored, lastChoice: action.choice, screen: "outcome" };
+      return {
+        ...state,
+        explored,
+        lastChoice: action.choice,
+        lastWasNew: isNew,
+        screen: "outcome",
+      };
     }
     case "TRY_ANOTHER":
       return { ...state, screen: "level" };
     case "NEXT_LEVEL": {
+      if (state.screen !== "outcome") return state;
       if (state.levelIndex >= TOTAL_LEVELS - 1) {
         return { ...state, screen: "victory", lastChoice: null };
       }
