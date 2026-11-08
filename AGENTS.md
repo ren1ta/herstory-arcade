@@ -28,3 +28,9 @@ use the editor.
   own key and store it in Secrets.
 - **Secrets.** Lovable manages them. Do not put secret values in the repo.
 <!-- LOVABLE:END -->
+
+## Project rules
+
+- Game logic lives in `src/game/` (pure reducer in `state.ts`, content in `levels.ts`, audio store in `audio.ts`); UI lives in `src/components/game/`. Why: keeps rules testable and story content editable without touching UI.
+- Sound effects are static MP3s in `public/audio/` played through `playSound()` only. Why: one place enforces the user's SFX toggle and volume.
+- Never combine custom text-effect utilities named `text-*` with `cn()`; name them without the `text-` prefix. Why: tailwind-merge treats them as colours and drops the real colour class.
