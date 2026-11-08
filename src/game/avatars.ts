@@ -1,8 +1,9 @@
-import avatarRed from "@/assets/avatar-red.png";
-import avatarCyber from "@/assets/avatar-cyber.png";
-import avatarClassic from "@/assets/avatar-classic.png";
+import scarletAsset from "@/assets/avatar-scarlet.png.asset.json";
+import novaAsset from "@/assets/avatar-nova.png.asset.json";
+import miraAsset from "@/assets/avatar-mira.png.asset.json";
+import ivyAsset from "@/assets/avatar-ivy.png.asset.json";
 
-export type AvatarId = "red" | "cyber" | "classic";
+export type AvatarId = string;
 
 export interface Avatar {
   id: AvatarId;
@@ -10,40 +11,56 @@ export interface Avatar {
   title: string;
   tagline: string;
   src: string;
+  /** Full image size in px. For sprite sheets this is the whole strip. */
   width: number;
   height: number;
+  /** Number of frames laid out left-to-right (1 = single still sprite). */
+  frames: number;
+  custom?: boolean;
 }
 
+/** Renita's own pixel avatars. */
 export const AVATARS: Avatar[] = [
   {
-    id: "red",
+    id: "scarlet",
     name: "SCARLET",
-    title: "The Adventurer",
+    title: "The Red-Haired Rebel",
     tagline: "Fearless explorer of forgotten history.",
-    src: avatarRed,
-    width: 320,
-    height: 808,
+    src: scarletAsset.url,
+    width: 165,
+    height: 230,
+    frames: 1,
   },
   {
-    id: "cyber",
+    id: "nova",
     name: "NOVA",
     title: "Cyber Heroine",
     tagline: "Hacks the system. Rewrites the code.",
-    src: avatarCyber,
-    width: 307,
-    height: 876,
+    src: novaAsset.url,
+    width: 200,
+    height: 230,
+    frames: 1,
   },
   {
-    id: "classic",
+    id: "mira",
     name: "MIRA",
     title: "Classic Pixel Hero",
     tagline: "Asks the questions nobody else will.",
-    src: avatarClassic,
-    width: 251,
-    height: 781,
+    src: miraAsset.url,
+    width: 399,
+    height: 634,
+    frames: 1,
+  },
+  {
+    id: "ivy",
+    name: "IVY",
+    title: "The Eco Guardian",
+    tagline: "Grows change from the roots up.",
+    src: ivyAsset.url,
+    width: 180,
+    height: 230,
+    frames: 1,
   },
 ];
 
-export function getAvatar(id: AvatarId | null): Avatar {
-  return AVATARS.find((a) => a.id === id) ?? AVATARS[0]!;
-}
+export const DEFAULT_AVATAR: Avatar = AVATARS[0]!;

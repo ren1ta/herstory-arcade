@@ -4,17 +4,17 @@ import { Game } from "@/components/game/Game";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Walk A Mile In Her Shoes — Retro Feminism Arcade" },
+      { title: "8-BIT EQUALITY — Walk A Mile In Her Shoes" },
       {
         name: "description",
         content:
-          "Play an 8-bit story game through the four waves of feminism, from suffrage to digital activism.",
+          "A retro pixel story game: three timelines, four life stages each, one bold choice at a time.",
       },
-      { property: "og:title", content: "Walk A Mile In Her Shoes — Retro Arcade" },
+      { property: "og:title", content: "8-BIT EQUALITY — Walk A Mile In Her Shoes" },
       {
         property: "og:description",
         content:
-          "Pick a pixel hero, get pulled into the TV and make choices across 130 years of history.",
+          "Pick a pixel hero, get pulled into the TV and break the simulation from the 1950s to 2026.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },

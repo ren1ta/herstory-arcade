@@ -1,15 +1,13 @@
-import { useEffect } from "react";
 import { PixelButton } from "../PixelButton";
+import { AudioControls } from "../AudioControls";
+import { AvatarSprite } from "../AvatarSprite";
 import { AVATARS } from "@/game/avatars";
+import { useHotkeys } from "@/game/useHotkeys";
 
 export function TitleScreen({ onStart }: { onStart: () => void }) {
-  useEffect(() => {
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Enter" || e.key === " ") onStart();
-    };
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, [onStart]);
+  useHotkeys((key) => {
+    if (key === "enter" || key === " ") onStart();
+  });
 
   return (
     <div className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden px-4 py-16 text-center">
@@ -19,34 +17,34 @@ export function TitleScreen({ onStart }: { onStart: () => void }) {
       </div>
 
       <p className="font-pixel relative mb-6 text-[10px] text-neon-cyan sm:text-xs">
-        ★ SOCIAL SCIENCE ARCADE ★
+        ★ WALK A MILE IN HER SHOES ★
       </p>
-      <h1 className="font-pixel relative text-2xl leading-snug text-cream pixel-text-shadow sm:text-4xl md:text-5xl">
-        WALK A MILE
+      <h1 className="font-pixel relative text-3xl leading-snug text-cream pixel-text-shadow sm:text-5xl md:text-6xl">
+        8-BIT
         <br />
-        <span className="glow-pink">IN HER SHOES</span>
+        <span className="glow-pink">EQUALITY</span>
       </h1>
       <p className="font-terminal relative mt-6 max-w-xl text-2xl text-pastel-pink sm:text-3xl">
-        A retro journey through the four waves of feminism — 1890s to today.
+        Three timelines. Four life stages each. One bold choice at a time.
       </p>
 
-      <div className="relative mt-10 flex items-end gap-6 sm:gap-10" aria-hidden>
+      <div className="relative mt-10 flex items-end gap-5 sm:gap-8" aria-hidden>
         {AVATARS.map((a, i) => (
-          <img
-            key={a.id}
-            src={a.src}
-            alt=""
-            className="animate-idle-bob h-28 w-auto drop-shadow-[4px_4px_0_var(--ink)] sm:h-40"
-            style={{ animationDelay: `${i * 0.25}s` }}
-          />
+          <div key={a.id} className="animate-idle-bob h-24 sm:h-32" style={{ animationDelay: `${i * 0.25}s` }}>
+            <AvatarSprite avatar={a} className="h-full drop-shadow-[4px_4px_0_var(--ink)]" />
+          </div>
         ))}
       </div>
 
-      <PixelButton size="lg" className="relative mt-12" onClick={onStart} autoFocus>
-        <span className="animate-blink">▶</span> PRESS START
+      <div className="relative mt-10">
+        <AudioControls variant="inline" />
+      </div>
+
+      <PixelButton size="lg" className="relative mt-8" onClick={onStart} autoFocus>
+        <span className="animate-blink">▶</span> START GAME
       </PixelButton>
       <p className="font-pixel relative mt-6 text-[8px] text-muted-foreground">
-        PRESS ENTER · 4 LEVELS · 12 STARS TO COLLECT
+        PRESS ENTER · 3 STORIES · 12 LEVELS · CHOOSE BOLDLY
       </p>
     </div>
   );
