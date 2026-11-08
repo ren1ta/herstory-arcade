@@ -9,6 +9,8 @@ export const SOUNDS = {
   select: "/audio/select.mp3",
   levelup: "/audio/levelup.mp3",
   victory: "/audio/victory.mp3",
+  gameover: "/audio/gameover.mp3",
+  blip: "/audio/blip.mp3",
 } as const;
 
 export type SoundName = keyof typeof SOUNDS;

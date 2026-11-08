@@ -1,77 +1,100 @@
-import type { AvatarId } from "./avatars";
-import { LEVELS, type ChoiceKey } from "./levels";
+import type { Avatar } from "./avatars";
+import { ACTS, LEVELS, LEVELS_PER_ACT, type ChoiceKey } from "./story";
 
-export type Screen = "title" | "select" | "cinematic" | "level" | "outcome" | "victory";
+export type Screen =
+  | "title"
+  | "select"
+  | "cinematic"
+  | "arrival"
+  | "actIntro"
+  | "level"
+  | "cleared"
+  | "gameover"
+  | "home"
+  | "victory";
 
 export interface GameState {
   screen: Screen;
-  avatarId: AvatarId | null;
+  avatar: Avatar | null;
+  /** Index into LEVELS (0..11). */
   levelIndex: number;
-  /** Paths explored per level index. Each new path earns one star. */
-  explored: ChoiceKey[][];
+  /** Number of levels cleared so far (each clear = one star). */
+  cleared: number;
   lastChoice: ChoiceKey | null;
-  /** True when the last choice explored a path for the first time (earned a star). */
-  lastWasNew: boolean;
+  /** How many times the player hit GAME OVER and retried. */
+  retries: number;
 }
 
 export type GameAction =
   | { type: "START" }
-  | { type: "SELECT_AVATAR"; avatarId: AvatarId }
+  | { type: "SELECT_AVATAR"; avatar: Avatar }
   | { type: "CINEMATIC_DONE" }
+  | { type: "ARRIVAL_DONE" }
+  | { type: "BEGIN_ACT" }
   | { type: "CHOOSE"; choice: ChoiceKey }
-  | { type: "TRY_ANOTHER" }
-  | { type: "NEXT_LEVEL" }
+  | { type: "RETRY" }
+  | { type: "CONTINUE" }
+  | { type: "LEAVE_HOME" }
   | { type: "RESET" };
 
 export const TOTAL_LEVELS = LEVELS.length;
-export const STARS_PER_LEVEL = 3;
-export const MAX_STARS = TOTAL_LEVELS * STARS_PER_LEVEL;
+export const TOTAL_ACTS = ACTS.length;
+export const MAX_STARS = TOTAL_LEVELS;
 
 export function initialState(): GameState {
   return {
     screen: "title",
-    avatarId: null,
+    avatar: null,
     levelIndex: 0,
-    explored: LEVELS.map(() => []),
+    cleared: 0,
     lastChoice: null,
-    lastWasNew: false,
+    retries: 0,
   };
+}
+
+export function isActFinale(levelIndex: number): boolean {
+  return (levelIndex + 1) % LEVELS_PER_ACT === 0;
 }
 
 export function gameReducer(state: GameState, action: GameAction): GameState {
   switch (action.type) {
     case "START":
-      return { ...state, screen: "select" };
+      return state.screen === "title" ? { ...state, screen: "select" } : state;
     case "SELECT_AVATAR":
-      return { ...state, avatarId: action.avatarId, screen: "cinematic" };
+      return { ...state, avatar: action.avatar, screen: "cinematic" };
     case "CINEMATIC_DONE":
-      return { ...state, screen: "level", levelIndex: 0 };
+      return state.screen === "cinematic" ? { ...state, screen: "arrival", levelIndex: 0 } : state;
+    case "ARRIVAL_DONE":
+      return state.screen === "arrival" ? { ...state, screen: "actIntro" } : state;
+    case "BEGIN_ACT":
+      return state.screen === "actIntro" ? { ...state, screen: "level" } : state;
     case "CHOOSE": {
       if (state.screen !== "level") return state;
-      const current = state.explored[state.levelIndex] ?? [];
-      const isNew = !current.includes(action.choice);
-      const explored = !isNew
-        ? state.explored
-        : state.explored.map((list, i) =>
-            i === state.levelIndex ? [...list, action.choice] : list,
-          );
+      const level = LEVELS[state.levelIndex];
+      const choice = level?.choices.find((c) => c.key === action.choice);
+      if (!choice) return state;
+      if (!choice.bold) {
+        return { ...state, screen: "gameover", lastChoice: choice.key, retries: state.retries + 1 };
+      }
       return {
         ...state,
-        explored,
-        lastChoice: action.choice,
-        lastWasNew: isNew,
-        screen: "outcome",
+        screen: "cleared",
+        lastChoice: choice.key,
+        cleared: Math.max(state.cleared, state.levelIndex + 1),
       };
     }
-    case "TRY_ANOTHER":
-      return { ...state, screen: "level" };
-    case "NEXT_LEVEL": {
-      if (state.screen !== "outcome") return state;
-      if (state.levelIndex >= TOTAL_LEVELS - 1) {
-        return { ...state, screen: "victory", lastChoice: null };
-      }
-      return { ...state, levelIndex: state.levelIndex + 1, screen: "level", lastChoice: null };
+    case "RETRY":
+      return state.screen === "gameover" ? { ...state, screen: "level", lastChoice: null } : state;
+    case "CONTINUE": {
+      if (state.screen !== "cleared") return state;
+      if (state.levelIndex >= TOTAL_LEVELS - 1) return { ...state, screen: "victory" };
+      if (isActFinale(state.levelIndex)) return { ...state, screen: "home" };
+      return { ...state, screen: "level", levelIndex: state.levelIndex + 1, lastChoice: null };
     }
+    case "LEAVE_HOME":
+      return state.screen === "home"
+        ? { ...state, screen: "actIntro", levelIndex: state.levelIndex + 1, lastChoice: null }
+        : state;
     case "RESET":
       return initialState();
     default:
@@ -79,19 +102,19 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
   }
 }
 
+/** Stars = levels cleared. */
 export function countStars(state: GameState): number {
-  return state.explored.reduce((sum, list) => sum + list.length, 0);
+  return state.cleared;
 }
 
-/** Hearts = waves cleared. A wave counts as cleared once any path in it is explored. */
+/** Hearts = acts (stories) fully cleared. */
 export function countHearts(state: GameState): number {
-  if (state.screen === "victory") return TOTAL_LEVELS;
-  return state.explored.filter((list) => list.length > 0).length;
+  return Math.floor(state.cleared / LEVELS_PER_ACT);
 }
 
-export function getRank(stars: number): string {
-  if (stars >= MAX_STARS) return "LEGEND OF EQUALITY";
-  if (stars >= 8) return "MOVEMENT BUILDER";
-  if (stars >= 5) return "BRAVE ORGANISER";
-  return "RISING ACTIVIST";
+export function getRank(retries: number): string {
+  if (retries === 0) return "LEGEND OF EQUALITY";
+  if (retries <= 3) return "MOVEMENT BUILDER";
+  if (retries <= 8) return "BRAVE ORGANISER";
+  return "UNSTOPPABLE REBEL";
 }
