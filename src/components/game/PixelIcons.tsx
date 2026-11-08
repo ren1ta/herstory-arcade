@@ -1,7 +1,7 @@
 import { cn } from "@/lib/utils";
 
 /** 8x7 pixel heart drawn as SVG rects. */
-export function PixelHeart({ filled, className }: { filled: boolean; className?: string }) {
+export function PixelHeart({ filled, className }: { filled: boolean; className?: string | undefined }) {
   const rows = [
     ".XX.XX.",
     "XXXXXXX",
