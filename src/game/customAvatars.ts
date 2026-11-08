@@ -130,7 +130,8 @@ export async function createCustomAvatar(file: File, frames: number): Promise<Av
 
 export function addCustomAvatar(avatar: Avatar) {
   load();
-  const next = [...list, avatar].slice(-MAX_CUSTOM);
+  if (list.length >= MAX_CUSTOM) throw new Error(`You can keep up to ${MAX_CUSTOM} custom avatars. Remove one before adding another.`);
+  const next = [...list, avatar];
   try {
     save(next);
   } catch {

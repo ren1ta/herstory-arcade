@@ -45,16 +45,26 @@ describe("game rules", () => {
     for (const l of LEVELS) {
       expect(l.choices.filter((c) => c.bold)).toHaveLength(1);
       expect(l.choices.filter((c) => !c.bold)).toHaveLength(1);
+      expect(l.background).toBeTruthy();
+      expect(l.npc.name).toBeTruthy();
+      expect(l.npc.sprite).toBeTruthy();
+      expect(l.npc.lines.length).toBeGreaterThan(0);
+      expect(l.npc.response).toBeTruthy();
     }
+    expect(new Set(LEVELS.map((l) => l.background)).size).toBe(LEVELS.length);
+  });
+
+  it("uses the requested year for the 1985 media level", () => {
+    expect(LEVELS.find((level) => level.id === "2.1")?.year).toBe("1985");
   });
 
   it("every level has an NPC dialogue and an avatar response before the choice", () => {
     for (const level of LEVELS) {
-      expect(level.npcName).toBeTruthy();
-      expect(level.npcSprite).toBeTruthy();
-      expect(level.npcDialogue).toHaveLength(2);
-      expect(level.npcDialogue.every((line) => line.length > 0)).toBe(true);
-      expect(level.avatarResponse.length).toBeGreaterThan(0);
+      expect(level.npc.name).toBeTruthy();
+      expect(level.npc.sprite).toBeTruthy();
+      expect(level.npc.lines).toHaveLength(2);
+      expect(level.npc.lines.every((line) => line.length > 0)).toBe(true);
+      expect(level.npc.response.length).toBeGreaterThan(0);
     }
   });
 
@@ -83,17 +93,17 @@ describe("game rules", () => {
     expect(LEVELS[s.levelIndex]!.id).toBe("2.1");
   });
 
-  it("stopping at an act intermission opens credits without advancing the timeline", () => {
+  it("stopping at an act intermission opens the journey summary", () => {
     let s = toFirstLevel();
     for (let i = 0; i < 4; i++) {
       s = gameReducer(s, { type: "CHOOSE", choice: boldKey(i) });
       s = gameReducer(s, { type: "CONTINUE" });
     }
     expect(s.screen).toBe("home");
-    s = gameReducer(s, { type: "STOP_HERE" });
-    expect(s.screen).toBe("credits");
-    expect(s.levelIndex).toBe(3);
+    s = gameReducer(s, { type: "STOP_AT_HOME" });
+    expect(s.screen).toBe("summary");
     expect(countStars(s)).toBe(4);
+    expect(s.levelIndex).toBe(3);
     expect(gameReducer(s, { type: "LEAVE_HOME" })).toEqual(s);
   });
 

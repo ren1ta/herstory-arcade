@@ -82,12 +82,12 @@ export function AvatarSelect({ onConfirm }: { onConfirm: (avatar: Avatar) => voi
   };
 
   const onRemove = (id: string) => {
+    setError(null);
     try {
       if (custom.some((avatar) => avatar.id === id)) removeCustomAvatar(id);
       else hideBuiltInAvatar(id);
-      setError(null);
     } catch (e) {
-      setError(e instanceof Error ? e.message : "Could not remove that avatar from this browser.");
+      setError(e instanceof Error ? e.message : "The avatar could not be removed.");
     }
   };
 
@@ -157,7 +157,7 @@ export function AvatarSelect({ onConfirm }: { onConfirm: (avatar: Avatar) => voi
                       aria-label={`Remove ${a.name} from the avatar list`}
                       className="font-pixel absolute top-2 right-5 bg-ink px-2 py-1 text-[8px] text-cream hover:text-neon-pink"
                     >
-                      ✕ DELETE
+                      ✕ REMOVE / DELETE
                     </button>
                   )}
                 </div>
@@ -174,7 +174,7 @@ export function AvatarSelect({ onConfirm }: { onConfirm: (avatar: Avatar) => voi
                 onClick={() => index !== avatars.length && go(avatars.length)}
               >
                 <p className="font-pixel text-3xl text-neon-pink">+</p>
-                <p className="font-pixel text-[10px] text-lavender-deep">UPLOAD YOUR SPRITE</p>
+                <p className="font-pixel text-[10px] text-lavender-deep">ADD YOUR SPRITE</p>
                 <p className="font-terminal text-lg leading-tight">
                   PNG or GIF with a transparent background works best. Sprite sheet? Pick its frame count.
                 </p>
@@ -233,7 +233,7 @@ export function AvatarSelect({ onConfirm }: { onConfirm: (avatar: Avatar) => voi
             <span key={i} className={cn("h-3 w-3", i === index ? "bg-neon-pink" : "bg-lavender/60")} />
           ))}
         </div>
-        {error && <p role="alert" className="font-terminal mt-3 text-center text-lg text-destructive">{error}</p>}
+        {error && <p role="status" className="font-terminal mt-3 text-center text-lg text-destructive">{error}</p>}
 
         <div className="mt-6 flex justify-center">
           <PixelButton size="lg" variant="gold" disabled={!current} onClick={() => current && onConfirm(current)}>

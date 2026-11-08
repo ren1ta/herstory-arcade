@@ -19,7 +19,7 @@ export function TitleScreen({ onStart }: { onStart: () => void }) {
       <p className="font-pixel relative mb-6 text-[10px] text-neon-cyan sm:text-xs">
         ★ 8-BIT EQUALITY ★
       </p>
-      <h1 className="font-pixel relative text-3xl leading-snug text-cream pixel-text-shadow sm:text-5xl md:text-6xl">
+      <h1 className="font-pixel relative max-w-5xl text-2xl leading-snug text-cream pixel-text-shadow sm:text-4xl md:text-6xl">
         WALK A MILE
         <br />
         <span className="glow-pink">IN HER SHOES</span>

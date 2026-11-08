@@ -44,7 +44,7 @@ export function Game() {
   const retry = useCallback(() => dispatch({ type: "RETRY" }), []);
   const next = useCallback(() => dispatch({ type: "CONTINUE" }), []);
   const leaveHome = useCallback(() => dispatch({ type: "LEAVE_HOME" }), []);
-  const stopHere = useCallback(() => dispatch({ type: "STOP_HERE" }), []);
+  const stopAtHome = useCallback(() => dispatch({ type: "STOP_AT_HOME" }), []);
   const reset = useCallback(() => dispatch({ type: "RESET" }), []);
 
   useEffect(() => {
@@ -59,6 +59,11 @@ export function Game() {
 
   return (
     <main className="relative min-h-screen">
+      <header className="pointer-events-none fixed inset-x-0 top-2 z-[100] text-center">
+        <span className="font-pixel bg-lavender-night/90 px-3 py-1 text-[9px] text-neon-cyan pixel-text-shadow sm:text-[10px]">
+          8-Bit Equality
+        </span>
+      </header>
       {state.screen === "title" && <TitleScreen onStart={start} />}
       {state.screen !== "title" && (
         <PixelButton
@@ -129,17 +134,17 @@ export function Game() {
         </div>
       )}
 
-      {(state.screen === "home" || state.screen === "credits" || state.screen === "victory") && (
+      {(state.screen === "home" || state.screen === "summary" || state.screen === "victory") && (
         <HomeScreen
-          key={`${state.screen === "credits" ? "home" : state.screen}${act.number}`}
+          key={`home-${act.number}`}
           avatar={avatar}
           clearedAct={act}
           victory={state.screen === "victory"}
-          stopped={state.screen === "credits"}
+          ending={state.screen === "summary"}
           stars={countStars(state)}
           retries={state.retries}
           onLeave={leaveHome}
-          onStop={stopHere}
+          onStop={stopAtHome}
           onReplay={reset}
         />
       )}

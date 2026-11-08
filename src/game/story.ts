@@ -34,6 +34,13 @@ export interface Choice {
   bold: boolean;
 }
 
+export interface NpcInteraction {
+  name: string;
+  sprite: string;
+  lines: string[];
+  response: string;
+}
+
 export interface Act {
   number: ActNumber;
   numeral: "I" | "II" | "III";
@@ -58,13 +65,85 @@ export interface Level {
   gameOverTitle: string;
   gameOverText: string;
   background: string;
-  npcName: string;
-  npcSprite: string;
-  npcDialogue: [string, string];
-  avatarResponse: string;
+  npc: NpcInteraction;
   /** Optional CSS filter so reused scenes feel different. */
   tint?: string;
 }
+
+const NPC = {
+  toyShopkeeper: {
+    name: "1950s SHOPKEEPER",
+    sprite: toyShopkeeper,
+    lines: ["The kitchen set is right over here, sweetheart.", "Those rockets and chemistry kits are really meant for the boys."],
+    response: "My curiosity isn't limited by a toy aisle. I deserve to choose what I want to learn.",
+  },
+  suffrageActivist: {
+    name: "1910s ACTIVIST",
+    sprite: activist,
+    lines: ["They're trying to drown us out before we reach the hall.", "Stand with us: every woman deserves a voice and a vote."],
+    response: "No one should be pushed out of this movement. I'll stand here and make my voice count.",
+  },
+  labSupervisor: {
+    name: "MALE LAB SUPERVISOR",
+    sprite: labSupervisor,
+    lines: ["This DNA image is remarkable. I'll present it at the next meeting.", "It will be simpler if the paper goes out under my name."],
+    response: "The evidence is mine, and so is the work. My contribution belongs on the record.",
+  },
+  bankManager: {
+    name: "1974 BANK MANAGER",
+    sprite: bankManager,
+    lines: ["Your business plan looks promising.", "But bank policy says a husband must sign before we approve your credit."],
+    response: "A capable woman should control her own finances. This unfair rule has to change for everyone.",
+  },
+  tvAnnouncer: {
+    name: "TV ANNOUNCER",
+    sprite: tvAnnouncer,
+    lines: ["Coming up: another princess waits for a prince to rescue her.", "That's the only kind of hero our viewers expect, right?"],
+    response: "Girls can be the heroes of their own stories. Let's put a clever, fearless princess on screen.",
+  },
+  venueOwner: {
+    name: "VENUE OWNER",
+    sprite: venueOwner,
+    lines: ["The main stage is booked for the guys tonight.", "You can hand out flyers by the door if you want to be involved."],
+    response: "We don't need permission to make music. We'll build our own stage and bring everyone with us.",
+  },
+  summitPanelist: {
+    name: "SUMMIT PANELIST",
+    sprite: summitPanelist,
+    lines: ["Our panel is discussing what women experience.", "We haven't made room to talk about how race and class change that experience."],
+    response: "We can't understand gender inequality in isolation. Race, class, and other barriers intersect.",
+  },
+  corporateCeo: {
+    name: "CORPORATE CEO",
+    sprite: corporateCeo,
+    lines: ["Your performance is excellent, but the promotion is going to someone else.", "He feels like a better fit for the leadership team."],
+    response: "Let's measure the work and the pay fairly. An audit can expose the rules holding people back.",
+  },
+  codingTeacher: {
+    name: "CODING TEACHER",
+    sprite: codingTeacher,
+    lines: ["The boys can take the coding challenge today.", "Girls, could you choose the background colours for the project?"],
+    response: "I want to solve the coding challenge too. Programming belongs to everyone in this room.",
+  },
+  universityDean: {
+    name: "UNIVERSITY DEAN",
+    sprite: universityDean,
+    lines: ["Students have reported harassment, and we need to protect the university's reputation.", "Please sign this agreement and keep the matter quiet."],
+    response: "People deserve safety and support, not silence. We'll speak together and demand accountability.",
+  },
+  techLead: {
+    name: "TECH LEAD",
+    sprite: techLead,
+    lines: ["The hiring model is ready, but its scores are lower for women's colleges.", "We could launch now and investigate the results later."],
+    response: "We can't deploy a tool that discriminates. Stop the launch, audit the data, and test again.",
+  },
+  keynoteSpeaker: {
+    name: "KEYNOTE SPEAKER",
+    sprite: keynoteSpeaker,
+    lines: ["Technology has solved gender bias once and for all!", "Surely we can celebrate now and move on?"],
+    response: "Equality isn't solved while people face digital exclusion, online harm, and unequal climate impacts.",
+  },
+} satisfies Record<string, NpcInteraction>;
 
 export const ACTS: Act[] = [
   {
@@ -115,13 +194,7 @@ export const LEVELS: Level[] = [
     gameOverText:
       "You take the stove. It's a fine toy — but the message sticks: science is 'for boys'. Toys that tell children what they're supposed to like can quietly shrink their dreams.",
     background: toyStore,
-    npcName: "1950s SHOPKEEPER",
-    npcSprite: toyShopkeeper,
-    npcDialogue: [
-      "The kitchen set is right over here, sweetheart.",
-      "Those rockets and chemistry kits are really meant for the boys.",
-    ],
-    avatarResponse: "My curiosity isn't limited by a toy aisle. I deserve to choose what I want to learn.",
+    npc: NPC.toyShopkeeper,
   },
   {
     id: "1.2",
@@ -150,13 +223,7 @@ export const LEVELS: Level[] = [
     gameOverText:
       "You slip away. The hecklers get louder and the march gets smaller. Rights are rarely handed out — they were won by ordinary people who stood up when it was scary.",
     background: suffrageStreet,
-    npcName: "1910s ACTIVIST",
-    npcSprite: activist,
-    npcDialogue: [
-      "They're trying to drown us out before we reach the hall.",
-      "Stand with us: every woman deserves a voice and a vote.",
-    ],
-    avatarResponse: "No one should be pushed out of this movement. I'll stand here and make my voice count.",
+    npc: NPC.suffrageActivist,
   },
   {
     id: "1.3",
@@ -181,13 +248,7 @@ export const LEVELS: Level[] = [
     gameOverText:
       "He takes the stage and the credit. For centuries, women's discoveries were filed under men's names — and history forgot who really did the work.",
     background: lab1950s,
-    npcName: "LAB SUPERVISOR",
-    npcSprite: labSupervisor,
-    npcDialogue: [
-      "This DNA image is remarkable. I'll present it at the next meeting.",
-      "It will be simpler if the paper goes out under my name.",
-    ],
-    avatarResponse: "The evidence is mine, and so is the work. My contribution belongs on the record.",
+    npc: NPC.labSupervisor,
   },
   {
     id: "1.4",
@@ -212,13 +273,7 @@ export const LEVELS: Level[] = [
     gameOverText:
       "You get the loan — but the rule survives, and so does the idea that a woman's money needs a man's permission. The next woman in line hits the same wall.",
     background: office1970s,
-    npcName: "BANK MANAGER",
-    npcSprite: bankManager,
-    npcDialogue: [
-      "Your business plan looks promising.",
-      "But bank policy says a husband must sign before we approve your credit.",
-    ],
-    avatarResponse: "A capable woman should control her own finances. This unfair rule has to change for everyone.",
+    npc: NPC.bankManager,
   },
 
   // ---------------- ACT II ----------------
@@ -227,7 +282,7 @@ export const LEVELS: Level[] = [
     act: 2,
     stage: "CHILDHOOD",
     age: 8,
-    year: "1980s",
+    year: "1985",
     place: "Saturday Morning Cartoons",
     system: "[SYSTEM: 1985 · SATURDAY MORNING CARTOONS]",
     scene:
@@ -249,13 +304,7 @@ export const LEVELS: Level[] = [
     gameOverText:
       "You keep watching. When every story shows girls waiting to be saved, kids start to believe it. Media shapes what we imagine is possible.",
     background: bedroom1980s,
-    npcName: "TV ANNOUNCER",
-    npcSprite: tvAnnouncer,
-    npcDialogue: [
-      "Coming up: another princess waits for a prince to rescue her.",
-      "That's the only kind of hero our viewers expect, right?",
-    ],
-    avatarResponse: "Girls can be the heroes of their own stories. Let's put a clever, fearless princess on screen.",
+    npc: NPC.tvAnnouncer,
   },
   {
     id: "2.2",
@@ -284,13 +333,7 @@ export const LEVELS: Level[] = [
     gameOverText:
       "You hand out flyers for bands who won't share the stage. When women only get supporting roles, the whole scene loses half its voices.",
     background: punkVenue,
-    npcName: "VENUE OWNER",
-    npcSprite: venueOwner,
-    npcDialogue: [
-      "The main stage is booked for the guys tonight.",
-      "You can hand out flyers by the door if you want to be involved.",
-    ],
-    avatarResponse: "We don't need permission to make music. We'll build our own stage and bring everyone with us.",
+    npc: NPC.venueOwner,
   },
   {
     id: "2.3",
@@ -319,13 +362,7 @@ export const LEVELS: Level[] = [
     gameOverText:
       "You stay quiet and the summit moves on. Women facing racism, poverty and sexism all at once are left out of the plan — again.",
     background: summit1999,
-    npcName: "SUMMIT PANELIST",
-    npcSprite: summitPanelist,
-    npcDialogue: [
-      "Our panel is discussing what women experience.",
-      "We haven't made room to talk about how race and class change that experience.",
-    ],
-    avatarResponse: "We can't understand gender inequality in isolation. Race, class, and other barriers intersect.",
+    npc: NPC.summitPanelist,
   },
   {
     id: "2.4",
@@ -354,13 +391,7 @@ export const LEVELS: Level[] = [
     gameOverText:
       "You stay put. The gap stays too — and grows every year in pay, pension and power. Unfair systems keep running until someone audits them.",
     background: boardroom2005,
-    npcName: "CORPORATE CEO",
-    npcSprite: corporateCeo,
-    npcDialogue: [
-      "Your performance is excellent, but the promotion is going to someone else.",
-      "He feels like a better fit for the leadership team.",
-    ],
-    avatarResponse: "Let's measure the work and the pay fairly. An audit can expose the rules holding people back.",
+    npc: NPC.corporateCeo,
     tint: "hue-rotate(200deg) saturate(0.85)",
   },
 
@@ -392,13 +423,7 @@ export const LEVELS: Level[] = [
     gameOverText:
       "You pick the colours while others learn to code. Small moments like this add up — women are still far fewer in tech jobs today.",
     background: computerLab,
-    npcName: "CODING TEACHER",
-    npcSprite: codingTeacher,
-    npcDialogue: [
-      "The boys can take the coding challenge today.",
-      "Girls, could you choose the background colours for the project?",
-    ],
-    avatarResponse: "I want to solve the coding challenge too. Programming belongs to everyone in this room.",
+    npc: NPC.codingTeacher,
     tint: "hue-rotate(70deg)",
   },
   {
@@ -428,13 +453,7 @@ export const LEVELS: Level[] = [
     gameOverText:
       "The agreement keeps the story secret — and keeps the problem alive. Breaking the silence helps survivors know they are not alone.",
     background: campus2017,
-    npcName: "UNIVERSITY DEAN",
-    npcSprite: universityDean,
-    npcDialogue: [
-      "Students have reported harassment, and we need to protect the university's reputation.",
-      "Please sign this agreement and keep the matter quiet.",
-    ],
-    avatarResponse: "People deserve safety and support, not silence. We'll speak together and demand accountability.",
+    npc: NPC.universityDean,
     tint: "hue-rotate(-45deg) saturate(1.2)",
   },
   {
@@ -464,13 +483,7 @@ export const LEVELS: Level[] = [
     gameOverText:
       "The tool ships and thousands of qualified women are quietly filtered out. AI learns from old data — and old data carries old prejudice.",
     background: aiLab2024,
-    npcName: "TECH LEAD",
-    npcSprite: techLead,
-    npcDialogue: [
-      "The hiring model is ready, but its scores are lower for women's colleges.",
-      "We could launch now and investigate the results later.",
-    ],
-    avatarResponse: "We can't deploy a tool that discriminates. Stop the launch, audit the data, and test again.",
+    npc: NPC.techLead,
     tint: "hue-rotate(150deg) saturate(1.3)",
   },
   {
@@ -500,13 +513,7 @@ export const LEVELS: Level[] = [
     gameOverText:
       "Everyone claps and moves on. When people believe a problem is solved, they stop fixing it. Equality needs updates, just like technology.",
     background: summit2026,
-    npcName: "KEYNOTE SPEAKER",
-    npcSprite: keynoteSpeaker,
-    npcDialogue: [
-      "Technology has solved gender bias once and for all!",
-      "Surely we can celebrate now and move on?",
-    ],
-    avatarResponse: "Equality isn't solved while people face digital exclusion, online harm, and unequal climate impacts.",
+    npc: NPC.keynoteSpeaker,
   },
 ];
 
