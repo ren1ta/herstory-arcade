@@ -100,7 +100,7 @@ export function LevelScreen({ level, avatar, explored, onChoose }: LevelScreenPr
                         done ? "bg-lavender/40" : "bg-cream hover:bg-pastel-pink",
                       )}
                     >
-                      <span className="font-pixel flex h-10 w-10 shrink-0 items-center justify-center bg-neon-pink text-sm text-cream text-pixel-shadow group-hover:bg-lavender-deep">
+                      <span className="font-pixel flex h-10 w-10 shrink-0 items-center justify-center bg-neon-pink text-sm text-cream pixel-text-shadow group-hover:bg-lavender-deep">
                         {c.key}
                       </span>
                       <span className="font-terminal flex-1 text-xl leading-tight sm:text-2xl">

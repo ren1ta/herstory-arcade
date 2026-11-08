@@ -21,10 +21,10 @@ export function TitleScreen({ onStart }: { onStart: () => void }) {
       <p className="font-pixel relative mb-6 text-[10px] text-neon-cyan sm:text-xs">
         ★ SOCIAL SCIENCE ARCADE ★
       </p>
-      <h1 className="font-pixel relative text-2xl leading-snug text-cream text-pixel-shadow sm:text-4xl md:text-5xl">
+      <h1 className="font-pixel relative text-2xl leading-snug text-cream pixel-text-shadow sm:text-4xl md:text-5xl">
         WALK A MILE
         <br />
-        <span className="text-glow-pink">IN HER SHOES</span>
+        <span className="glow-pink">IN HER SHOES</span>
       </h1>
       <p className="font-terminal relative mt-6 max-w-xl text-2xl text-pastel-pink sm:text-3xl">
         A retro journey through the four waves of feminism — 1890s to today.

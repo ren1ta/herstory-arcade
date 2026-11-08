@@ -27,7 +27,7 @@ export function Hud({ avatar, hearts, totalHearts, stars, maxStars, levelLabel }
           />
         </div>
         <div className="leading-tight">
-          <p className="font-pixel text-[9px] text-glow-pink">{avatar.name}</p>
+          <p className="font-pixel text-[9px] glow-pink">{avatar.name}</p>
           <p className="font-terminal text-lg text-neon-cyan">{levelLabel}</p>
         </div>
       </div>
@@ -44,7 +44,7 @@ export function Hud({ avatar, hearts, totalHearts, stars, maxStars, levelLabel }
 
       <div className="flex items-center gap-2" aria-label={`${stars} of ${maxStars} stars`}>
         <PixelStar className="animate-star-spin" />
-        <span className="font-pixel text-[10px] text-glow-gold">
+        <span className="font-pixel text-[10px] glow-gold">
           {String(stars).padStart(2, "0")}/{maxStars}
         </span>
       </div>

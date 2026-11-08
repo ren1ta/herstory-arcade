@@ -57,7 +57,7 @@ export function VictoryScreen({ avatar, stars, explored, onReplay }: VictoryScre
         />
 
         <PixelWindow title="RUN_COMPLETE.EXE" className="w-full">
-          <h1 className="font-pixel text-center text-2xl text-glow-pink sm:text-4xl">VICTORY!</h1>
+          <h1 className="font-pixel text-center text-2xl glow-pink sm:text-4xl">VICTORY!</h1>
           <p className="font-terminal mt-3 text-center text-2xl sm:text-3xl">
             {avatar.name} walked a mile through 130 years of history — proving the fight for
             equality evolves alongside human technology.
@@ -77,7 +77,7 @@ export function VictoryScreen({ avatar, stars, explored, onReplay }: VictoryScre
             </div>
           </div>
           <p className="font-pixel mt-4 text-center text-[10px] text-lavender-deep">RANK</p>
-          <p className="font-pixel bg-lavender-night mt-2 py-3 text-center text-sm text-glow-gold sm:text-base">
+          <p className="font-pixel bg-lavender-night mt-2 py-3 text-center text-sm glow-gold sm:text-base">
             {getRank(stars)}
           </p>
 

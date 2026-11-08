@@ -27,7 +27,7 @@ export function PixelWindow({
     >
       {title && (
         <header className="titlebar flex items-center justify-between gap-3 border-b-4 border-ink px-3 py-2">
-          <h2 className="font-pixel truncate text-[10px] text-cream text-pixel-shadow sm:text-xs">
+          <h2 className="font-pixel truncate text-[10px] text-cream pixel-text-shadow sm:text-xs">
             {title}
           </h2>
           <div className="flex shrink-0 gap-1.5" aria-hidden>

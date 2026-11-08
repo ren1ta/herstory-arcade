@@ -48,7 +48,7 @@ export function OutcomeScreen({
       <PixelWindow title={`LEVEL ${level.number} · PATH ${choice.key}`} className="animate-pop-in">
         <div className="relative">
           {earnedStar && (
-            <div className="animate-float-up font-pixel pointer-events-none absolute -top-2 right-0 flex items-center gap-2 text-xs text-glow-gold">
+            <div className="animate-float-up font-pixel pointer-events-none absolute -top-2 right-0 flex items-center gap-2 text-xs glow-gold">
               +1 <PixelStar className="h-6 w-6" />
             </div>
           )}
@@ -65,7 +65,7 @@ export function OutcomeScreen({
         </div>
 
         <div className="pixel-frame mt-6 bg-lavender-night px-4 py-3 text-cream">
-          <p className="font-pixel text-[10px] text-glow-gold">🔓 {level.unlockTitle}</p>
+          <p className="font-pixel text-[10px] glow-gold">🔓 {level.unlockTitle}</p>
           <p className="font-terminal mt-2 text-xl leading-snug sm:text-2xl">{level.unlock}</p>
         </div>
 

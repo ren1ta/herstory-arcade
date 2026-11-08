@@ -54,7 +54,7 @@ export function AvatarSelect({ onConfirm }: { onConfirm: (id: AvatarId) => void 
                 <p
                   className={cn(
                     "font-pixel mt-4 text-xs",
-                    active ? "text-glow-pink" : "text-lavender-deep",
+                    active ? "glow-pink" : "text-lavender-deep",
                   )}
                 >
                   {active ? "▶ " : ""}

@@ -140,7 +140,7 @@ export function LivingRoomCinematic({ avatar, onDone }: { avatar: Avatar; onDone
         </div>
 
         {pulling && (
-          <p className="font-pixel animate-whoosh absolute top-[12%] left-[38%] text-3xl text-glow-pink text-pixel-shadow sm:text-6xl">
+          <p className="font-pixel animate-whoosh absolute top-[12%] left-[38%] text-3xl glow-pink pixel-text-shadow sm:text-6xl">
             WHOOSH!
           </p>
         )}

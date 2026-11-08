@@ -167,22 +167,22 @@
   font-family: var(--font-terminal);
 }
 
-@utility text-glow-pink {
+@utility glow-pink {
   color: var(--neon-pink);
   text-shadow: var(--glow-pink);
 }
 
-@utility text-glow-cyan {
+@utility glow-cyan {
   color: var(--neon-cyan);
   text-shadow: var(--glow-cyan);
 }
 
-@utility text-glow-gold {
+@utility glow-gold {
   color: var(--neon-gold);
   text-shadow: var(--glow-gold);
 }
 
-@utility text-pixel-shadow {
+@utility pixel-text-shadow {
   text-shadow:
     3px 3px 0 var(--ink),
     -1px -1px 0 var(--ink),

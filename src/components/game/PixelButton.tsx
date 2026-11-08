@@ -8,7 +8,7 @@ const pixelButtonVariants = cva(
   {
     variants: {
       variant: {
-        pink: "bg-neon-pink text-cream text-pixel-shadow hover:brightness-110",
+        pink: "bg-neon-pink text-cream pixel-text-shadow hover:brightness-110",
         cyan: "bg-neon-cyan text-ink hover:brightness-110",
         gold: "bg-neon-gold text-ink hover:brightness-110",
         cream: "bg-cream text-ink hover:bg-pastel-pink",
