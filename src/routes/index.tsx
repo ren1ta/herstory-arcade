@@ -1,23 +1,28 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { Game } from "@/components/game/Game";
 
-// The home route ships no og:image, so serve-time hosting can inject the
-// project's social preview (explicit og:image or latest screenshot).
 export const Route = createFileRoute("/")({
+  head: () => ({
+    meta: [
+      { title: "Walk A Mile In Her Shoes — Retro Feminism Arcade" },
+      {
+        name: "description",
+        content:
+          "Play an 8-bit story game through the four waves of feminism, from suffrage to digital activism.",
+      },
+      { property: "og:title", content: "Walk A Mile In Her Shoes — Retro Arcade" },
+      {
+        property: "og:description",
+        content:
+          "Pick a pixel hero, get pulled into the TV and make choices across 130 years of history.",
+      },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
+    ],
+  }),
   component: Index,
 });
 
-// IMPORTANT: Replace this placeholder. See ./README.md for routing conventions.
 function Index() {
-  return (
-    <div
-      className="flex min-h-screen items-center justify-center"
-      style={{ backgroundColor: "#fcfbf8" }}
-    >
-      <img
-        data-lovable-blank-page-placeholder="REMOVE_THIS"
-        src="https://cdn.gpteng.co/blank-app-v1.svg"
-        alt="Your app will live here!"
-      />
-    </div>
-  );
+  return <Game />;
 }
