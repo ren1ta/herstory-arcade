@@ -43,7 +43,7 @@ export function TitleScreen({ onStart }: { onStart: () => void }) {
       </div>
 
       <PixelButton size="lg" className="relative mt-12" onClick={onStart} autoFocus>
-        <span className="animate-blink">▶ PRESS START</span>
+        <span className="animate-blink">▶</span> PRESS START
       </PixelButton>
       <p className="font-pixel relative mt-6 text-[8px] text-muted-foreground">
         PRESS ENTER · 4 LEVELS · 12 STARS TO COLLECT

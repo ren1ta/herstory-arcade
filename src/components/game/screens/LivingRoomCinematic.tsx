@@ -29,8 +29,8 @@ const CAPTIONS: Record<Phase, string> = {
 const POSE: Record<Phase, CSSProperties> = {
   enter: { left: "6%", bottom: "6%", height: "42%", transitionDuration: "0ms" },
   walk: { left: "44%", bottom: "6%", height: "42%", transitionDuration: "2900ms" },
-  sit: { left: "58%", bottom: "20%", height: "36%", transitionDuration: "450ms" },
-  tv: { left: "58%", bottom: "20%", height: "36%", transitionDuration: "0ms" },
+  sit: { left: "59.5%", bottom: "21%", height: "36%", transitionDuration: "450ms" },
+  tv: { left: "59.5%", bottom: "21%", height: "36%", transitionDuration: "0ms" },
   vortex: {
     left: "91%",
     bottom: "55%",
@@ -107,7 +107,7 @@ export function LivingRoomCinematic({ avatar, onDone }: { avatar: Avatar; onDone
             style={{
               left: "92.5%",
               top: "45%",
-              width: "70%",
+              width: "55%",
               aspectRatio: "1",
               transform: "translate(-50%, -50%)",
             }}
@@ -130,8 +130,12 @@ export function LivingRoomCinematic({ avatar, onDone }: { avatar: Avatar; onDone
               "h-full w-auto origin-bottom drop-shadow-[4px_4px_0_var(--ink)]",
               phase === "walk" && "animate-walk-bob",
               phase === "sit" && "animate-plop",
-              phase === "tv" && "scale-y-[0.92]",
             )}
+            style={
+              phase === "sit" || phase === "tv"
+                ? { clipPath: "inset(0 0 42% 0)" }
+                : undefined
+            }
           />
         </div>
 

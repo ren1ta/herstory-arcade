@@ -57,7 +57,7 @@ export function Game() {
       )}
 
       {inLevel && (
-        <div className="relative min-h-screen">
+        <div className="relative isolate min-h-screen">
           <img
             key={level.background}
             src={level.background}

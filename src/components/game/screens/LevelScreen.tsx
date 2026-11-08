@@ -36,8 +36,8 @@ export function LevelScreen({ level, avatar, explored, onChoose }: LevelScreenPr
   }, [typed, onChoose]);
 
   return (
-    <div className="grid items-end gap-6 lg:grid-cols-[minmax(0,220px)_1fr]">
-      <div className="hidden justify-center lg:flex">
+    <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,220px)_1fr]">
+      <div className="hidden justify-center lg:sticky lg:top-6 lg:mt-24 lg:flex">
         <img
           src={avatar.src}
           alt={`${avatar.name} ready for action`}

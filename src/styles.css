@@ -236,7 +236,7 @@
     var(--lavender-night) 30deg 45deg,
     var(--neon-gold) 45deg 60deg
   );
-  mask-image: radial-gradient(circle, black 0%, black 45%, transparent 70%);
+  mask-image: radial-gradient(circle closest-side, black 55%, transparent 100%);
   animation: vortex-spin 0.6s linear infinite;
 }
 

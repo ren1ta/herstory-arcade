@@ -19,11 +19,11 @@ export function Hud({ avatar, hearts, totalHearts, stars, maxStars, levelLabel }
   return (
     <div className="pixel-frame flex flex-wrap items-center gap-x-5 gap-y-3 bg-lavender-night/90 px-3 py-2 text-cream">
       <div className="flex items-center gap-2">
-        <div className="pixel-frame h-12 w-10 overflow-hidden bg-pastel-pink">
+        <div className="pixel-frame relative h-12 w-12 overflow-hidden bg-pastel-pink">
           <img
             src={avatar.src}
             alt=""
-            className="h-[200%] w-auto max-w-none -translate-x-[15%] object-cover object-top"
+            className="absolute top-0.5 left-1/2 h-32 w-auto max-w-none -translate-x-1/2"
           />
         </div>
         <div className="leading-tight">
