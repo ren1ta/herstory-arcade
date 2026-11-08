@@ -236,7 +236,7 @@
     var(--lavender-night) 30deg 45deg,
     var(--neon-gold) 45deg 60deg
   );
-  mask-image: radial-gradient(circle closest-side, black 55%, transparent 100%);
+  mask-image: radial-gradient(circle closest-side, black 45%, transparent 75%);
   animation: vortex-spin 0.6s linear infinite;
 }
 
@@ -303,7 +303,7 @@
   0% { transform: scale(1, 1); }
   40% { transform: scale(1.12, 0.82); }
   70% { transform: scale(0.96, 1.04); }
-  100% { transform: scale(1, 0.92); }
+  100% { transform: scale(1, 0.94); }
 }
 
 @keyframes whoosh-flash {
@@ -392,3 +392,23 @@
 @keyframes grid-scroll {
   to { background-position: 0 48px, 0 0; }
 }
+
+/* ---------- 8-BIT EQUALITY additions ---------- */
+@keyframes sprite-cycle { to { transform: translateX(-100%); } }
+@keyframes pixel-out { 0% { opacity: 1; transform: scale(1); } 100% { opacity: 0; transform: scale(0); } }
+@keyframes drop-in {
+  0% { transform: translateY(-110vh) rotate(-540deg) scale(0.2); }
+  70% { transform: translateY(4%) rotate(0deg) scale(1.05, 0.9); }
+  100% { transform: translateY(0) scale(1); }
+}
+@keyframes glitch {
+  0%, 100% { transform: translate(0); }
+  25% { transform: translate(-3px, 2px); }
+  50% { transform: translate(3px, -2px); }
+  75% { transform: translate(-2px, -1px); }
+}
+@keyframes beam { 0%, 100% { opacity: 0; } 40% { opacity: 1; } }
+@keyframes flash-out { 0% { opacity: 1; } 100% { opacity: 0; } }
+@utility animate-drop-in { animation: drop-in 1s steps(10) both; }
+@utility animate-glitch { animation: glitch 0.3s steps(2) infinite; }
+@utility animate-flash-out { animation: flash-out 0.8s ease-out forwards; }
