@@ -31,6 +31,8 @@ use the editor.
 
 ## Project rules
 
-- Game logic lives in `src/game/` (pure reducer in `state.ts`, content in `levels.ts`, audio store in `audio.ts`); UI lives in `src/components/game/`. Why: keeps rules testable and story content editable without touching UI.
+- Game logic lives in `src/game/` (pure reducer in `state.ts`, story content in `story.ts`, audio store in `audio.ts`, player-uploaded sprites in `customAvatars.ts`); UI lives in `src/components/game/`. Why: keeps rules testable and story content editable without touching UI.
+- Avatars render only through `AvatarSprite` (handles single images and horizontal sprite sheets); built-in avatars are CDN `.asset.json` pointers. Why: one place for sprite-sheet frame logic.
+- Living-room positions live in `ROOM` in `LivingRoomStage.tsx`; the couch front is re-drawn over the actor via clip-path. Why: makes a seated sprite sink into the cushions instead of floating.
 - Sound effects are static MP3s in `public/audio/` played through `playSound()` only. Why: one place enforces the user's SFX toggle and volume.
 - Never combine custom text-effect utilities named `text-*` with `cn()`; name them without the `text-` prefix. Why: tailwind-merge treats them as colours and drops the real colour class.

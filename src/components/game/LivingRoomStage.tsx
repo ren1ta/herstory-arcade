@@ -9,7 +9,7 @@ import { cn } from "@/lib/utils";
 export const ROOM = {
   door: { left: "13.5%", bottom: "40%", height: "19%" },
   floor: { left: "50%", bottom: "7%", height: "27%" },
-  seat: { left: "67.9%", bottom: "33%", height: "21%" },
+  seat: { left: "67.9%", bottom: "37.5%", height: "21%" },
   tv: { left: "92.6%", bottom: "55.4%", height: "21%" },
   tvCenter: { x: 92.6, y: 44.6 },
 } as const;
