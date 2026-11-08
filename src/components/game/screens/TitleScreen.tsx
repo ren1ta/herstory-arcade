@@ -16,6 +16,9 @@ export function TitleScreen({ onStart }: { onStart: () => void }) {
         <div className="synth-grid absolute -inset-x-1/2 top-0 h-[200%]" />
       </div>
 
+      <p className="font-pixel relative mb-6 text-[10px] text-neon-cyan sm:text-xs">
+        ★ 8-BIT EQUALITY ★
+      </p>
       <h1 className="font-pixel relative max-w-5xl text-2xl leading-snug text-cream pixel-text-shadow sm:text-4xl md:text-6xl">
         WALK A MILE
         <br />

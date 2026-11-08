@@ -39,7 +39,6 @@ interface HomeScreenProps {
   onReplay: () => void;
 }
 
-/** Pixel-dissolve back to the living room after a story, with act choices or the final summary. */
 export function HomeScreen({
   avatar,
   clearedAct,
@@ -54,13 +53,14 @@ export function HomeScreen({
   const [phase, setPhase] = useState<Phase>("arrive");
   const nextAct = ACTS[clearedAct.number];
   const showSummary = victory || ending;
+  const hearts = Math.floor(stars / 4);
 
   useEffect(() => {
-    playSound("teleport");
+    playSound(victory ? "victory" : "teleport");
     const emergeTimer = window.setTimeout(() => setPhase("emerge"), 900);
     const seatedTimer = window.setTimeout(() => {
       setPhase("seated");
-      playSound(victory ? "victory" : "sit");
+      if (!victory) playSound("sit");
     }, 1950);
     return () => {
       window.clearTimeout(emergeTimer);
@@ -84,20 +84,23 @@ export function HomeScreen({
       })),
     [],
   );
-
-  const tvOn = ending ? false : victory ? phase === "arrive" || phase === "emerge" : true;
+  const tvOn = !ending && (victory ? phase === "arrive" || phase === "emerge" : true);
   const showPortal = !ending && (phase === "arrive" || phase === "emerge" || phase === "leaving");
-  const hearts = Math.floor(stars / 4);
 
   const stage = (
     <LivingRoomStage
       fullscreen={!showSummary}
       tvOn={tvOn}
       actor={
-        <div className="absolute transition-all ease-out" style={{ transitionProperty: "left, bottom, height, transform", ...POSE[phase] }}>
-          <div key={phase === "seated" ? "s" : "o"} className={cn("h-full origin-bottom", phase === "seated" && "animate-plop")}>
-            <AvatarSprite avatar={avatar} alt={`${avatar.name} back home`} className="h-full drop-shadow-[4px_4px_0_var(--ink)]" />
-          </div>
+        <div
+          className="absolute transition-all ease-out"
+          style={{ transitionProperty: "left, bottom, height, transform", ...POSE[phase] }}
+        >
+          <AvatarSprite
+            avatar={avatar}
+            alt={`${avatar.name} back home`}
+            className={cn("h-full drop-shadow-[4px_4px_0_var(--ink)]", phase === "seated" && "animate-plop")}
+          />
         </div>
       }
     >
@@ -124,8 +127,17 @@ export function HomeScreen({
     </LivingRoomStage>
   );
 
+  if (!showSummary) {
+    return (
+      <>
+        {stage}
+        <PixelDissolve />
+      </>
+    );
+  }
+
   return (
-    <div className={cn("relative min-h-screen overflow-hidden px-3 py-6 sm:px-6", !showSummary && "flex items-center justify-center bg-ink")}>
+    <div className="relative min-h-screen overflow-hidden px-3 py-6 sm:px-6">
       {victory && phase === "seated" && (
         <div className="pointer-events-none fixed inset-0 z-[80]" aria-hidden>
           {confetti.map((c, i) => (
@@ -137,59 +149,57 @@ export function HomeScreen({
           ))}
         </div>
       )}
-      <div className={cn("mx-auto flex w-full flex-col gap-6", showSummary ? "max-w-5xl" : "max-w-[min(100%,calc((100vh-3rem)*16/9))]")}>
+      <div className="mx-auto flex w-full max-w-5xl flex-col gap-6">
         {stage}
-        {showSummary && (
-          <PixelWindow title={victory ? "FULL_JOURNEY_COMPLETE.EXE" : "JOURNEY_SUMMARY.EXE"} className="w-full">
-            <h1 className="font-pixel text-center text-xl glow-pink sm:text-3xl">
-              {victory ? "GRAND VICTORY!" : "THANK YOU, HERO!"}
-            </h1>
-            <p className="font-terminal mt-3 text-center text-2xl sm:text-3xl">
-              {victory
-                ? "VICTORY! You completed the full journey from historical suffrage to digital ethics. Equality evolves through continuous action!"
-                : "Thank you for walking a mile in her shoes!"}
-            </p>
-            <div className="mt-6 flex flex-wrap items-center justify-center gap-6">
-              <div className="flex gap-1" aria-label={`${hearts} of ${TOTAL_ACTS} act badges`}>
-                {Array.from({ length: TOTAL_ACTS }, (_, i) => (
-                  <PixelHeart key={i} filled={i < hearts} className="h-8 w-8" />
-                ))}
-              </div>
-              <div className="flex items-center gap-2">
-                <PixelStar className="animate-star-spin h-8 w-8" />
-                <span className="font-pixel text-sm text-lavender-deep">{stars} / {MAX_STARS}</span>
-              </div>
-              <span className="font-pixel text-[9px] text-lavender-deep">CONTINUES USED: {retries}</span>
-            </div>
-            <p className="font-pixel mt-4 text-center text-[10px] text-lavender-deep">RANK</p>
-            <p className="font-pixel mt-2 bg-lavender-night py-3 text-center text-sm glow-gold sm:text-base">
-              {getRank(retries)}
-            </p>
-            <ol className="mt-6 grid gap-2 sm:grid-cols-3">
-              {ACTS.map((act, index) => (
-                <li
-                  key={act.number}
-                  className={cn("border-l-8 px-3 py-2", index < hearts ? "border-neon-pink bg-pastel-pink/50" : "border-lavender-deep bg-lavender/30")}
-                >
-                  <p className="font-pixel text-[8px] text-lavender-deep">
-                    ACT {act.numeral} · {act.era} {index < hearts ? "★" : ""}
-                  </p>
-                  <p className="font-terminal text-xl">{act.title}</p>
-                </li>
+        <PixelWindow title={victory ? "FULL_JOURNEY_COMPLETE.EXE" : "JOURNEY_SUMMARY.EXE"} className="w-full">
+          <h1 className="font-pixel text-center text-xl glow-pink sm:text-3xl">
+            {victory ? "GRAND VICTORY!" : "THANK YOU, HERO!"}
+          </h1>
+          <p className="font-terminal mt-3 text-center text-2xl sm:text-3xl">
+            {victory
+              ? "VICTORY! You completed the full journey from historical suffrage to digital ethics. Equality evolves through continuous action!"
+              : "Thank you for walking a mile in her shoes!"}
+          </p>
+          <div className="mt-6 flex flex-wrap items-center justify-center gap-6">
+            <div className="flex gap-1" aria-label={`${hearts} of ${TOTAL_ACTS} act badges`}>
+              {Array.from({ length: TOTAL_ACTS }, (_, i) => (
+                <PixelHeart key={i} filled={i < hearts} className="h-8 w-8" />
               ))}
-            </ol>
-            {victory && (
-              <p className="font-terminal mt-6 text-center text-2xl text-ink/80">
-                The next level is real life. What will you stand up for?
-              </p>
-            )}
-            <div className="mt-6 flex justify-center">
-              <PixelButton size="lg" variant="gold" onClick={onReplay}>
-                ↻ PLAY AGAIN
-              </PixelButton>
             </div>
-          </PixelWindow>
-        )}
+            <div className="flex items-center gap-2">
+              <PixelStar className="animate-star-spin h-8 w-8" />
+              <span className="font-pixel text-sm text-lavender-deep">{stars} / {MAX_STARS}</span>
+            </div>
+            <span className="font-pixel text-[9px] text-lavender-deep">CONTINUES USED: {retries}</span>
+          </div>
+          <p className="font-pixel mt-4 text-center text-[10px] text-lavender-deep">RANK</p>
+          <p className="font-pixel mt-2 bg-lavender-night py-3 text-center text-sm glow-gold sm:text-base">
+            {getRank(retries)}
+          </p>
+          <ol className="mt-6 grid gap-2 sm:grid-cols-3">
+            {ACTS.map((act, index) => (
+              <li
+                key={act.number}
+                className={cn("border-l-8 px-3 py-2", index < hearts ? "border-neon-pink bg-pastel-pink/50" : "border-lavender-deep bg-lavender/30")}
+              >
+                <p className="font-pixel text-[8px] text-lavender-deep">
+                  ACT {act.numeral} · {act.era} {index < hearts ? "★" : ""}
+                </p>
+                <p className="font-terminal text-xl">{act.title}</p>
+              </li>
+            ))}
+          </ol>
+          {victory && (
+            <p className="font-terminal mt-6 text-center text-2xl text-ink/80">
+              The next level is real life. What will you stand up for?
+            </p>
+          )}
+          <div className="mt-6 flex justify-center">
+            <PixelButton size="lg" variant="gold" onClick={onReplay}>
+              ↻ PLAY AGAIN
+            </PixelButton>
+          </div>
+        </PixelWindow>
       </div>
       <PixelDissolve />
     </div>

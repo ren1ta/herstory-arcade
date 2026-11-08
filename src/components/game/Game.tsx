@@ -24,6 +24,7 @@ import { LevelScreen } from "./screens/LevelScreen";
 import { ClearedScreen } from "./screens/ClearedScreen";
 import { GameOverScreen } from "./screens/GameOverScreen";
 import { HomeScreen } from "./screens/HomeScreen";
+import { PixelButton } from "./PixelButton";
 
 export function Game() {
   const [state, dispatch] = useReducer(gameReducer, undefined, initialState);
@@ -64,6 +65,18 @@ export function Game() {
         </span>
       </header>
       {state.screen === "title" && <TitleScreen onStart={start} />}
+      {state.screen !== "title" && (
+        <PixelButton
+          variant="night"
+          size="sm"
+          className="fixed top-3 left-3 z-[100] shadow-lg"
+          onClick={reset}
+          aria-label="Back to home screen and reset the current game"
+          title="Return to title screen and reset this run"
+        >
+          ◀ BACK TO HOME
+        </PixelButton>
+      )}
       {state.screen === "select" && <AvatarSelect onConfirm={selectAvatar} />}
       {state.screen === "cinematic" && <LivingRoomCinematic avatar={avatar} onDone={cinematicDone} />}
       {state.screen === "arrival" && <ArrivalScreen avatar={avatar} onDone={arrivalDone} />}

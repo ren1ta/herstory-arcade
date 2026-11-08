@@ -28,6 +28,8 @@ export function Hud({ avatar, hearts, totalHearts, stars, maxStars, levelLabel }
           />
         </div>
         <div className="leading-tight">
+          <p className="font-pixel text-[7px] text-neon-cyan">8-BIT EQUALITY</p>
+          <p className="font-pixel mt-1 text-[7px] text-cream">WALK A MILE IN HER SHOES</p>
           <p className="font-pixel text-[9px] glow-pink">{avatar.name}</p>
           <p className="font-terminal text-lg text-neon-cyan">{levelLabel}</p>
         </div>

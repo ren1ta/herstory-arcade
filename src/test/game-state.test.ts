@@ -58,6 +58,16 @@ describe("game rules", () => {
     expect(LEVELS.find((level) => level.id === "2.1")?.year).toBe("1985");
   });
 
+  it("every level has an NPC dialogue and an avatar response before the choice", () => {
+    for (const level of LEVELS) {
+      expect(level.npc.name).toBeTruthy();
+      expect(level.npc.sprite).toBeTruthy();
+      expect(level.npc.lines).toHaveLength(2);
+      expect(level.npc.lines.every((line) => line.length > 0)).toBe(true);
+      expect(level.npc.response.length).toBeGreaterThan(0);
+    }
+  });
+
   it("a wrong choice triggers GAME OVER and RETRY replays the same level", () => {
     let s = toFirstLevel();
     s = gameReducer(s, { type: "CHOOSE", choice: wrongKey(0) });
@@ -93,6 +103,8 @@ describe("game rules", () => {
     s = gameReducer(s, { type: "STOP_AT_HOME" });
     expect(s.screen).toBe("summary");
     expect(countStars(s)).toBe(4);
+    expect(s.levelIndex).toBe(3);
+    expect(gameReducer(s, { type: "LEAVE_HOME" })).toEqual(s);
   });
 
   it("clearing all 12 levels reaches victory with 12 stars and 3 hearts", () => {

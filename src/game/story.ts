@@ -1,26 +1,27 @@
-import toyStore from "@/assets/Screenshot 2026-11-08 at 3.10.24 PM 3.png";
-import suffrageStreet from "@/assets/Screenshot 2026-11-08 at 3.19.03 PM.png";
-import lab1950s from "@/assets/Screenshot 2026-11-08 at 3.19.41 PM.png";
-import office1970s from "@/assets/Screenshot 2026-11-08 at 3.20.22 PM.png";
-import livingRoom1985 from "@/assets/Screenshot 2026-11-08 at 3.21.02 PM.png";
-import punkVenue from "@/assets/Screenshot 2026-11-08 at 3.21.40 PM.png";
-import summit1999 from "@/assets/Screenshot 2026-11-08 at 3.22.30 PM.png";
-import boardroom from "@/assets/Screenshot 2026-11-08 at 3.23.07 PM.png";
-import computerLab from "@/assets/Screenshot 2026-11-08 at 3.23.42 PM.png";
-import campus from "@/assets/Screenshot 2026-11-08 at 3.24.13 PM.png";
-import aiLab from "@/assets/Screenshot 2026-11-08 at 3.27.22 PM.png";
-import summitStage from "@/assets/Screenshot 2026-11-08 at.png";
-import toyShopkeeper from "@/assets/toy shopkeeper.png";
-import bystander from "@/assets/bystander.png";
-import maleScientist from "@/assets/male scientist.png";
-import bankManager from "@/assets/corporate ceo.png";
-import venueOwner from "@/assets/music venue owner.png";
-import summitPanelist from "@/assets/summit panelist.png";
-import corporateCeo from "@/assets/corporate ceo.png";
-import codingTeacher from "@/assets/computer lab teacher.png";
-import universityDean from "@/assets/college dean.png";
-import techLead from "@/assets/tech lead.png";
-import keynoteSpeaker from "@/assets/keynote speaker'.png";
+import toyStore from "@/assets/scene-1950s-toy-store-final.png";
+import suffrageStreet from "@/assets/scene-1910s-suffrage-street.png";
+import lab1950s from "@/assets/scene-1950s-dna-lab.png";
+import office1970s from "@/assets/scene-1974-bank-office.png";
+import bedroom1980s from "@/assets/scene-1985-living-room.png";
+import punkVenue from "@/assets/scene-1993-music-venue.png";
+import summit1999 from "@/assets/scene-1999-summit-hall.png";
+import boardroom2005 from "@/assets/scene-2005-boardroom.png";
+import computerLab from "@/assets/scene-2012-computer-lab.png";
+import campus2017 from "@/assets/scene-2017-campus.png";
+import aiLab2024 from "@/assets/scene-2024-ai-lab.png";
+import summit2026 from "@/assets/scene-2026-tech-summit.png";
+import toyShopkeeper from "@/assets/npc-toy-shopkeeper.png";
+import activist from "@/assets/npc-activist.png";
+import labSupervisor from "@/assets/npc-lab-supervisor.png";
+import bankManager from "@/assets/npc-bank-manager.png";
+import tvAnnouncer from "@/assets/npc-tv-announcer.png";
+import venueOwner from "@/assets/npc-venue-owner.png";
+import summitPanelist from "@/assets/npc-summit-panelist.png";
+import corporateCeo from "@/assets/npc-corporate-ceo.png";
+import codingTeacher from "@/assets/npc-coding-teacher.png";
+import universityDean from "@/assets/npc-university-dean.png";
+import techLead from "@/assets/npc-tech-lead.png";
+import keynoteSpeaker from "@/assets/npc-keynote-speaker.png";
 
 export type ChoiceKey = "A" | "B";
 export type LifeStage = "CHILDHOOD" | "YOUTH" | "ADULTHOOD" | "MATURITY";
@@ -73,74 +74,74 @@ const NPC = {
   toyShopkeeper: {
     name: "1950s SHOPKEEPER",
     sprite: toyShopkeeper,
-    lines: ["Kitchen sets are over here for girls.", "The rocket kits are really meant for boys."],
-    response: "I shouldn't have to choose between what I like and what people expect of me.",
+    lines: ["The kitchen set is right over here, sweetheart.", "Those rockets and chemistry kits are really meant for the boys."],
+    response: "My curiosity isn't limited by a toy aisle. I deserve to choose what I want to learn.",
   },
   suffrageActivist: {
-    name: "1910s BYSTANDER",
-    sprite: bystander,
-    lines: ["The march is getting louder.", "Will you stand with us and demand the vote?"],
-    response: "Their voices deserve to be heard—and I can add mine to the march.",
+    name: "1910s ACTIVIST",
+    sprite: activist,
+    lines: ["They're trying to drown us out before we reach the hall.", "Stand with us: every woman deserves a voice and a vote."],
+    response: "No one should be pushed out of this movement. I'll stand here and make my voice count.",
   },
   labSupervisor: {
     name: "MALE LAB SUPERVISOR",
-    sprite: maleScientist,
-    lines: ["Your results are impressive.", "I'll present the discovery under my name."],
-    response: "My work and my name belong together. I won't let this discovery be taken from me.",
+    sprite: labSupervisor,
+    lines: ["This DNA image is remarkable. I'll present it at the next meeting.", "It will be simpler if the paper goes out under my name."],
+    response: "The evidence is mine, and so is the work. My contribution belongs on the record.",
   },
   bankManager: {
     name: "1974 BANK MANAGER",
     sprite: bankManager,
-    lines: ["Your business plan looks solid.", "I'm afraid I still need your husband's signature."],
-    response: "My finances are my own. This rule must change for every woman who comes after me.",
+    lines: ["Your business plan looks promising.", "But bank policy says a husband must sign before we approve your credit."],
+    response: "A capable woman should control her own finances. This unfair rule has to change for everyone.",
   },
   tvAnnouncer: {
     name: "TV ANNOUNCER",
-    sprite: bystander,
-    lines: ["And now, another story about a princess waiting to be rescued.", "That's the only kind of story kids want to see, right?"],
-    response: "Stories can show girls solving problems and saving the day, too.",
+    sprite: tvAnnouncer,
+    lines: ["Coming up: another princess waits for a prince to rescue her.", "That's the only kind of hero our viewers expect, right?"],
+    response: "Girls can be the heroes of their own stories. Let's put a clever, fearless princess on screen.",
   },
   venueOwner: {
     name: "VENUE OWNER",
     sprite: venueOwner,
-    lines: ["The main stage is booked.", "You and the other women can hand out flyers at the door."],
-    response: "If this stage has no room for us, we'll make our own—and bring everyone with us.",
+    lines: ["The main stage is booked for the guys tonight.", "You can hand out flyers by the door if you want to be involved."],
+    response: "We don't need permission to make music. We'll build our own stage and bring everyone with us.",
   },
   summitPanelist: {
     name: "SUMMIT PANELIST",
     sprite: summitPanelist,
-    lines: ["Let's discuss what women experience.", "We don't need to get into race or class today."],
-    response: "Race, class, and gender can overlap. We need to hear from people at those crossroads.",
+    lines: ["Our panel is discussing what women experience.", "We haven't made room to talk about how race and class change that experience."],
+    response: "We can't understand gender inequality in isolation. Race, class, and other barriers intersect.",
   },
   corporateCeo: {
     name: "CORPORATE CEO",
     sprite: corporateCeo,
-    lines: ["The promotion is going to someone else.", "He just feels like a better fit for the team."],
-    response: "Let's examine the evidence. Fair pay and promotion need transparent standards.",
+    lines: ["Your performance is excellent, but the promotion is going to someone else.", "He feels like a better fit for the leadership team."],
+    response: "Let's measure the work and the pay fairly. An audit can expose the rules holding people back.",
   },
   codingTeacher: {
     name: "CODING TEACHER",
     sprite: codingTeacher,
-    lines: ["Boys, take the coding challenge.", "Girls, why don't you choose the background colours?"],
-    response: "I want to solve the coding challenge, too. Programming belongs to everyone.",
+    lines: ["The boys can take the coding challenge today.", "Girls, could you choose the background colours for the project?"],
+    response: "I want to solve the coding challenge too. Programming belongs to everyone in this room.",
   },
   universityDean: {
     name: "UNIVERSITY DEAN",
     sprite: universityDean,
-    lines: ["We should keep these reports private.", "Please sign this agreement so the university can move on."],
-    response: "Silence protects the institution, not students. We need accountability and change.",
+    lines: ["Students have reported harassment, and we need to protect the university's reputation.", "Please sign this agreement and keep the matter quiet."],
+    response: "People deserve safety and support, not silence. We'll speak together and demand accountability.",
   },
   techLead: {
     name: "TECH LEAD",
     sprite: techLead,
-    lines: ["The hiring model is ready to ship.", "It scores applicants lower when their CV mentions a women's college."],
-    response: "A deadline can't excuse discrimination. We need to audit the data and fix the bias first.",
+    lines: ["The hiring model is ready, but its scores are lower for women's colleges.", "We could launch now and investigate the results later."],
+    response: "We can't deploy a tool that discriminates. Stop the launch, audit the data, and test again.",
   },
   keynoteSpeaker: {
     name: "KEYNOTE SPEAKER",
     sprite: keynoteSpeaker,
-    lines: ["Technology has completely solved gender bias!", "There's nothing left to fix—let's celebrate."],
-    response: "Equality isn't finished. We need digital rights, fair technology, and action that continues.",
+    lines: ["Technology has solved gender bias once and for all!", "Surely we can celebrate now and move on?"],
+    response: "Equality isn't solved while people face digital exclusion, online harm, and unequal climate impacts.",
   },
 } satisfies Record<string, NpcInteraction>;
 
@@ -302,7 +303,7 @@ export const LEVELS: Level[] = [
     gameOverTitle: "DAMSEL MODE: ON",
     gameOverText:
       "You keep watching. When every story shows girls waiting to be saved, kids start to believe it. Media shapes what we imagine is possible.",
-    background: livingRoom1985,
+    background: bedroom1980s,
     npc: NPC.tvAnnouncer,
   },
   {
@@ -389,7 +390,7 @@ export const LEVELS: Level[] = [
     gameOverTitle: "CEILING HOLDS",
     gameOverText:
       "You stay put. The gap stays too — and grows every year in pay, pension and power. Unfair systems keep running until someone audits them.",
-    background: boardroom,
+    background: boardroom2005,
     npc: NPC.corporateCeo,
     tint: "hue-rotate(200deg) saturate(0.85)",
   },
@@ -451,7 +452,7 @@ export const LEVELS: Level[] = [
     gameOverTitle: "SILENCE SIGNED",
     gameOverText:
       "The agreement keeps the story secret — and keeps the problem alive. Breaking the silence helps survivors know they are not alone.",
-    background: campus,
+    background: campus2017,
     npc: NPC.universityDean,
     tint: "hue-rotate(-45deg) saturate(1.2)",
   },
@@ -481,7 +482,7 @@ export const LEVELS: Level[] = [
     gameOverTitle: "BIAS DEPLOYED",
     gameOverText:
       "The tool ships and thousands of qualified women are quietly filtered out. AI learns from old data — and old data carries old prejudice.",
-    background: aiLab,
+    background: aiLab2024,
     npc: NPC.techLead,
     tint: "hue-rotate(150deg) saturate(1.3)",
   },
@@ -511,7 +512,7 @@ export const LEVELS: Level[] = [
     gameOverTitle: "COMPLACENCY LOOP",
     gameOverText:
       "Everyone claps and moves on. When people believe a problem is solved, they stop fixing it. Equality needs updates, just like technology.",
-    background: summitStage,
+    background: summit2026,
     npc: NPC.keynoteSpeaker,
   },
 ];

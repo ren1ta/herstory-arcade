@@ -89,12 +89,14 @@ export function LevelScreen({ level, avatar, onChoose }: LevelScreenProps) {
             </filter>
           </defs>
         </svg>
-        <div className="absolute top-3 left-3 bg-ink/80 px-2 py-1 font-pixel text-[8px] text-neon-gold sm:text-[10px]">
+        <div className="font-pixel absolute top-3 left-3 bg-ink/80 px-2 py-1 text-[8px] text-neon-gold sm:text-[10px]">
           {level.place} · {level.year}
         </div>
       </div>
 
-      <PixelWindow title={`LEVEL ${level.id} — ${level.stage} · AGE ${level.age}`} className="w-full">
+      <PixelWindow title={`LEVEL ${level.id} — ${level.stage} · AGE ${level.age}`} tone="night" className="w-full">
+        <p className="font-terminal mb-4 text-lg text-cream/80 sm:text-xl">{level.scene}</p>
+        <p className="font-pixel mb-3 text-[8px] text-neon-cyan sm:text-[9px]">{level.system}</p>
         {phase === "npc" && (
           <button
             type="button"
@@ -126,13 +128,13 @@ export function LevelScreen({ level, avatar, onChoose }: LevelScreenProps) {
         {phase === "choice" && (
           <div className="animate-pop-in">
             <p className="font-pixel text-[10px] text-lavender-deep">
-              ▼ WHAT WILL YOU DO? <span className="text-ink/60">(press A or B)</span>
+              ▼ WHAT WILL YOU DO? <span className="text-cream/60">(press A or B)</span>
             </p>
             <ul className="mt-3 space-y-3">
               {level.choices.map((choice) => (
                 <li key={choice.key}>
                   <PixelButton
-                    variant="pink"
+                    variant={choice.bold ? "gold" : "night"}
                     size="md"
                     className="w-full justify-start gap-4 whitespace-normal text-left"
                     onClick={() => {
