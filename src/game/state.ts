@@ -48,7 +48,7 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
       return { ...state, screen: "level", levelIndex: 0 };
     case "CHOOSE": {
       if (state.screen !== "level") return state;
-      const current = state.explored[state.levelIndex];
+      const current = state.explored[state.levelIndex] ?? [];
       const isNew = !current.includes(action.choice);
       const explored = !isNew
         ? state.explored

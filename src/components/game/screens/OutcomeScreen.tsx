@@ -24,7 +24,7 @@ export function OutcomeScreen({
   onTryAnother,
   onNext,
 }: OutcomeScreenProps) {
-  const choice = level.choices.find((c) => c.key === choiceKey) ?? level.choices[0];
+  const choice = level.choices.find((c) => c.key === choiceKey) ?? level.choices[0]!;
 
   useEffect(() => {
     if (!earnedStar) return;

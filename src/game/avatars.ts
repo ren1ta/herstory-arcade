@@ -45,5 +45,5 @@ export const AVATARS: Avatar[] = [
 ];
 
 export function getAvatar(id: AvatarId | null): Avatar {
-  return AVATARS.find((a) => a.id === id) ?? AVATARS[0];
+  return AVATARS.find((a) => a.id === id) ?? AVATARS[0]!;
 }

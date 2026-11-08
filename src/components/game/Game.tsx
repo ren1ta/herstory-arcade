@@ -24,7 +24,8 @@ import { VictoryScreen } from "./screens/VictoryScreen";
 export function Game() {
   const [state, dispatch] = useReducer(gameReducer, undefined, initialState);
   const avatar = getAvatar(state.avatarId);
-  const level = LEVELS[state.levelIndex];
+  const level = LEVELS[state.levelIndex] ?? LEVELS[0]!;
+  const levelExplored = state.explored[state.levelIndex] ?? [];
   const stars = countStars(state);
 
   const start = useCallback(() => {
@@ -82,7 +83,7 @@ export function Game() {
                 key={level.number}
                 level={level}
                 avatar={avatar}
-                explored={state.explored[state.levelIndex]}
+                explored={levelExplored}
                 onChoose={choose}
               />
             )}
@@ -92,7 +93,7 @@ export function Game() {
                 level={level}
                 choiceKey={state.lastChoice}
                 earnedStar={state.lastWasNew}
-                remaining={STARS_PER_LEVEL - state.explored[state.levelIndex].length}
+                remaining={STARS_PER_LEVEL - levelExplored.length}
                 isFinal={state.levelIndex === TOTAL_LEVELS - 1}
                 onTryAnother={tryAnother}
                 onNext={next}
