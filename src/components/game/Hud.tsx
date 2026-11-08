@@ -1,4 +1,5 @@
 import { PixelHeart, PixelStar } from "./PixelIcons";
+import { AvatarSprite } from "./AvatarSprite";
 import type { Avatar } from "@/game/avatars";
 
 interface HudProps {
@@ -10,20 +11,17 @@ interface HudProps {
   levelLabel: string;
 }
 
-/** Heads-up display: avatar portrait, heart tracker, star counter and progress bar. */
+/** Heads-up display: avatar portrait, story hearts, star counter and progress bar. */
 export function Hud({ avatar, hearts, totalHearts, stars, maxStars, levelLabel }: HudProps) {
   const pct = Math.round((stars / maxStars) * 100);
-  const segments = 12;
-  const filledSegments = Math.round((stars / maxStars) * segments);
 
   return (
     <div className="pixel-frame flex flex-wrap items-center gap-x-5 gap-y-3 bg-lavender-night/90 px-3 py-2 text-cream">
       <div className="flex items-center gap-2">
         <div className="pixel-frame relative h-12 w-12 overflow-hidden bg-pastel-pink">
-          <img
-            src={avatar.src}
-            alt=""
-            className="absolute top-0.5 left-1/2 h-32 w-auto max-w-none -translate-x-1/2"
+          <AvatarSprite
+            avatar={avatar}
+            className="absolute top-0.5 left-1/2 h-24 -translate-x-1/2"
           />
         </div>
         <div className="leading-tight">
@@ -32,7 +30,11 @@ export function Hud({ avatar, hearts, totalHearts, stars, maxStars, levelLabel }
         </div>
       </div>
 
-      <div className="flex items-center gap-1" aria-label={`${hearts} of ${totalHearts} waves cleared`}>
+      <div
+        className="flex items-center gap-1"
+        aria-label={`${hearts} of ${totalHearts} stories cleared`}
+        title="Stories cleared"
+      >
         {Array.from({ length: totalHearts }, (_, i) => (
           <PixelHeart
             key={i}
@@ -42,7 +44,7 @@ export function Hud({ avatar, hearts, totalHearts, stars, maxStars, levelLabel }
         ))}
       </div>
 
-      <div className="flex items-center gap-2" aria-label={`${stars} of ${maxStars} stars`}>
+      <div className="flex items-center gap-2" aria-label={`${stars} of ${maxStars} levels cleared`}>
         <PixelStar className="animate-star-spin" />
         <span className="font-pixel text-[10px] glow-gold">
           {String(stars).padStart(2, "0")}/{maxStars}
@@ -58,11 +60,11 @@ export function Hud({ avatar, hearts, totalHearts, stars, maxStars, levelLabel }
           aria-valuemin={0}
           aria-valuemax={100}
         >
-          {Array.from({ length: segments }, (_, i) => (
+          {Array.from({ length: maxStars }, (_, i) => (
             <span
               key={i}
               className={
-                i < filledSegments
+                i < stars
                   ? "flex-1 bg-neon-pink shadow-[inset_0_-4px_0_0_color-mix(in_oklab,var(--ink)_30%,transparent)]"
                   : "flex-1 bg-lavender-deep/50"
               }
