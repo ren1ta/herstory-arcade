@@ -48,6 +48,16 @@ describe("game rules", () => {
     }
   });
 
+  it("every level has an NPC dialogue and an avatar response before the choice", () => {
+    for (const level of LEVELS) {
+      expect(level.npcName).toBeTruthy();
+      expect(level.npcSprite).toBeTruthy();
+      expect(level.npcDialogue).toHaveLength(2);
+      expect(level.npcDialogue.every((line) => line.length > 0)).toBe(true);
+      expect(level.avatarResponse.length).toBeGreaterThan(0);
+    }
+  });
+
   it("a wrong choice triggers GAME OVER and RETRY replays the same level", () => {
     let s = toFirstLevel();
     s = gameReducer(s, { type: "CHOOSE", choice: wrongKey(0) });
@@ -71,6 +81,20 @@ describe("game rules", () => {
     s = gameReducer(s, { type: "LEAVE_HOME" });
     expect(s.screen).toBe("actIntro");
     expect(LEVELS[s.levelIndex]!.id).toBe("2.1");
+  });
+
+  it("stopping at an act intermission opens credits without advancing the timeline", () => {
+    let s = toFirstLevel();
+    for (let i = 0; i < 4; i++) {
+      s = gameReducer(s, { type: "CHOOSE", choice: boldKey(i) });
+      s = gameReducer(s, { type: "CONTINUE" });
+    }
+    expect(s.screen).toBe("home");
+    s = gameReducer(s, { type: "STOP_HERE" });
+    expect(s.screen).toBe("credits");
+    expect(s.levelIndex).toBe(3);
+    expect(countStars(s)).toBe(4);
+    expect(gameReducer(s, { type: "LEAVE_HOME" })).toEqual(s);
   });
 
   it("clearing all 12 levels reaches victory with 12 stars and 3 hearts", () => {

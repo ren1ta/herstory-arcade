@@ -3,6 +3,7 @@ import type { Avatar } from "./avatars";
 
 /** Player-uploaded sprites, kept in this browser so the exhibition laptop remembers them. */
 const STORAGE_KEY = "eight-bit-equality-avatars";
+const HIDDEN_AVATARS_KEY = "wamihs-hidden-avatars";
 const MAX_CUSTOM = 6;
 const MAX_FILE_BYTES = 5 * 1024 * 1024;
 const MAX_SIDE = 1024;
@@ -10,6 +11,8 @@ const EMPTY: Avatar[] = [];
 
 let list: Avatar[] = EMPTY;
 let loaded = false;
+let hiddenAvatarIds: string[] = [];
+let hiddenLoaded = false;
 const listeners = new Set<() => void>();
 
 function load() {
@@ -24,9 +27,29 @@ function load() {
   }
 }
 
+function loadHiddenAvatars() {
+  if (hiddenLoaded || typeof window === "undefined") return;
+  hiddenLoaded = true;
+  try {
+    const raw = window.localStorage.getItem(HIDDEN_AVATARS_KEY);
+    const parsed: unknown = raw ? JSON.parse(raw) : [];
+    hiddenAvatarIds = Array.isArray(parsed)
+      ? parsed.filter((id): id is string => typeof id === "string")
+      : [];
+  } catch {
+    hiddenAvatarIds = [];
+  }
+}
+
 function save(next: Avatar[]) {
   window.localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
   list = next;
+  for (const l of listeners) l();
+}
+
+function saveHiddenAvatars(next: string[]) {
+  window.localStorage.setItem(HIDDEN_AVATARS_KEY, JSON.stringify(next));
+  hiddenAvatarIds = next;
   for (const l of listeners) l();
 }
 
@@ -42,6 +65,21 @@ export function useCustomAvatars(): Avatar[] {
       return list;
     },
     () => EMPTY,
+  );
+}
+
+export function useHiddenAvatars(): string[] {
+  return useSyncExternalStore(
+    (cb) => {
+      loadHiddenAvatars();
+      listeners.add(cb);
+      return () => listeners.delete(cb);
+    },
+    () => {
+      loadHiddenAvatars();
+      return hiddenAvatarIds;
+    },
+    () => [],
   );
 }
 
@@ -102,9 +140,10 @@ export function addCustomAvatar(avatar: Avatar) {
 
 export function removeCustomAvatar(id: string) {
   load();
-  try {
-    save(list.filter((a) => a.id !== id));
-  } catch {
-    // ignore
-  }
+  save(list.filter((a) => a.id !== id));
+}
+
+export function hideBuiltInAvatar(id: string) {
+  loadHiddenAvatars();
+  if (!hiddenAvatarIds.includes(id)) saveHiddenAvatars([...hiddenAvatarIds, id]);
 }

@@ -24,6 +24,7 @@ import { LevelScreen } from "./screens/LevelScreen";
 import { ClearedScreen } from "./screens/ClearedScreen";
 import { GameOverScreen } from "./screens/GameOverScreen";
 import { HomeScreen } from "./screens/HomeScreen";
+import { PixelButton } from "./PixelButton";
 
 export function Game() {
   const [state, dispatch] = useReducer(gameReducer, undefined, initialState);
@@ -43,6 +44,7 @@ export function Game() {
   const retry = useCallback(() => dispatch({ type: "RETRY" }), []);
   const next = useCallback(() => dispatch({ type: "CONTINUE" }), []);
   const leaveHome = useCallback(() => dispatch({ type: "LEAVE_HOME" }), []);
+  const stopHere = useCallback(() => dispatch({ type: "STOP_HERE" }), []);
   const reset = useCallback(() => dispatch({ type: "RESET" }), []);
 
   useEffect(() => {
@@ -58,6 +60,18 @@ export function Game() {
   return (
     <main className="relative min-h-screen">
       {state.screen === "title" && <TitleScreen onStart={start} />}
+      {state.screen !== "title" && (
+        <PixelButton
+          variant="night"
+          size="sm"
+          className="fixed top-3 left-3 z-[100] shadow-lg"
+          onClick={reset}
+          aria-label="Back to home screen and reset the current game"
+          title="Return to title screen and reset this run"
+        >
+          ◀ BACK TO HOME
+        </PixelButton>
+      )}
       {state.screen === "select" && <AvatarSelect onConfirm={selectAvatar} />}
       {state.screen === "cinematic" && <LivingRoomCinematic avatar={avatar} onDone={cinematicDone} />}
       {state.screen === "arrival" && <ArrivalScreen avatar={avatar} onDone={arrivalDone} />}
@@ -115,15 +129,17 @@ export function Game() {
         </div>
       )}
 
-      {(state.screen === "home" || state.screen === "victory") && (
+      {(state.screen === "home" || state.screen === "credits" || state.screen === "victory") && (
         <HomeScreen
-          key={state.screen + act.number}
+          key={`${state.screen === "credits" ? "home" : state.screen}${act.number}`}
           avatar={avatar}
           clearedAct={act}
           victory={state.screen === "victory"}
+          stopped={state.screen === "credits"}
           stars={countStars(state)}
           retries={state.retries}
           onLeave={leaveHome}
+          onStop={stopHere}
           onReplay={reset}
         />
       )}

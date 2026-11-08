@@ -1,10 +1,12 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 import { AVATARS, type Avatar } from "@/game/avatars";
 import {
   addCustomAvatar,
   createCustomAvatar,
+  hideBuiltInAvatar,
   removeCustomAvatar,
+  useHiddenAvatars,
   useCustomAvatars,
 } from "@/game/customAvatars";
 import { playSound } from "@/game/audio";
@@ -18,7 +20,11 @@ const FRAME_OPTIONS = [1, 2, 3, 4, 6, 8];
 /** Sliding sideways carousel of avatars, with a final "upload your own sprite" card. */
 export function AvatarSelect({ onConfirm }: { onConfirm: (avatar: Avatar) => void }) {
   const custom = useCustomAvatars();
-  const avatars = [...AVATARS, ...custom];
+  const hiddenAvatarIds = useHiddenAvatars();
+  const avatars = useMemo(
+    () => [...AVATARS.filter((avatar) => !hiddenAvatarIds.includes(avatar.id)), ...custom],
+    [custom, hiddenAvatarIds],
+  );
   const slideCount = avatars.length + 1; // + upload card
   const [index, setIndex] = useState(0);
   const [pendingId, setPendingId] = useState<string | null>(null);
@@ -75,10 +81,21 @@ export function AvatarSelect({ onConfirm }: { onConfirm: (avatar: Avatar) => voi
     }
   };
 
+  const onRemove = (id: string) => {
+    try {
+      if (custom.some((avatar) => avatar.id === id)) removeCustomAvatar(id);
+      else hideBuiltInAvatar(id);
+      setError(null);
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Could not remove that avatar from this browser.");
+    }
+  };
+
   return (
     <div className="flex min-h-screen flex-col items-center justify-center px-4 py-16">
-      <PixelWindow title="SELECT_PLAYER.EXE" className="w-full max-w-4xl">
-        <h1 className="font-pixel text-center text-sm text-lavender-deep sm:text-lg">CHOOSE YOUR HERO</h1>
+      <PixelWindow title="WALK A MILE IN HER SHOES · PLAYER SELECT" className="w-full max-w-4xl">
+        <p className="font-pixel text-center text-[8px] text-neon-cyan">8-BIT EQUALITY</p>
+        <h1 className="font-pixel mt-3 text-center text-sm text-lavender-deep sm:text-lg">CHOOSE YOUR HERO</h1>
         <p className="font-terminal mt-2 text-center text-2xl text-ink/80">
           Slide through the heroes — or upload your own pixel sprite.
         </p>
@@ -133,13 +150,14 @@ export function AvatarSelect({ onConfirm }: { onConfirm: (avatar: Avatar) => voi
                     <p className={cn("font-pixel mt-2 text-[8px]", active ? "text-neon-cyan" : "")}>{a.title}</p>
                     <p className="font-terminal mt-2 text-xl leading-tight">{a.tagline}</p>
                   </button>
-                  {a.custom && active && (
+                  {active && (
                     <button
                       type="button"
-                      onClick={() => removeCustomAvatar(a.id)}
+                      onClick={() => onRemove(a.id)}
+                      aria-label={`Remove ${a.name} from the avatar list`}
                       className="font-pixel absolute top-2 right-5 bg-ink px-2 py-1 text-[8px] text-cream hover:text-neon-pink"
                     >
-                      ✕ REMOVE
+                      ✕ DELETE
                     </button>
                   )}
                 </div>
@@ -184,7 +202,6 @@ export function AvatarSelect({ onConfirm }: { onConfirm: (avatar: Avatar) => voi
                 <PixelButton size="sm" variant="cyan" disabled={busy} onClick={() => fileRef.current?.click()}>
                   {busy ? "LOADING…" : "CHOOSE IMAGE"}
                 </PixelButton>
-                {error && <p className="font-terminal text-lg text-destructive">{error}</p>}
               </div>
             </div>
           </div>
@@ -216,6 +233,7 @@ export function AvatarSelect({ onConfirm }: { onConfirm: (avatar: Avatar) => voi
             <span key={i} className={cn("h-3 w-3", i === index ? "bg-neon-pink" : "bg-lavender/60")} />
           ))}
         </div>
+        {error && <p role="alert" className="font-terminal mt-3 text-center text-lg text-destructive">{error}</p>}
 
         <div className="mt-6 flex justify-center">
           <PixelButton size="lg" variant="gold" disabled={!current} onClick={() => current && onConfirm(current)}>

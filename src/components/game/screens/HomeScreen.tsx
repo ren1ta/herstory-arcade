@@ -28,14 +28,26 @@ interface HomeScreenProps {
   clearedAct: Act;
   /** Final homecoming after Act III. */
   victory: boolean;
+  stopped: boolean;
   stars: number;
   retries: number;
   onLeave: () => void;
+  onStop: () => void;
   onReplay: () => void;
 }
 
-/** Pixel-dissolve back to the living room after a story; portal to the next act or final victory. */
-export function HomeScreen({ avatar, clearedAct, victory, stars, retries, onLeave, onReplay }: HomeScreenProps) {
+/** Pixel-dissolve back to the living room after a story; portal to the next act or final summary. */
+export function HomeScreen({
+  avatar,
+  clearedAct,
+  victory,
+  stopped,
+  stars,
+  retries,
+  onLeave,
+  onStop,
+  onReplay,
+}: HomeScreenProps) {
   const [phase, setPhase] = useState<Phase>("arrive");
   const nextAct = ACTS[clearedAct.number];
 
@@ -69,40 +81,59 @@ export function HomeScreen({ avatar, clearedAct, victory, stars, retries, onLeav
     [],
   );
 
-  const tvOn = victory ? phase === "arrive" || phase === "emerge" : true;
-  const showPortal = phase === "arrive" || phase === "emerge" || phase === "leaving";
+  const tvOn = !stopped && (victory ? phase === "arrive" || phase === "emerge" : true);
+  const showPortal = !stopped && (phase === "arrive" || phase === "emerge" || phase === "leaving");
+  const homecomingDialogue =
+    clearedAct.number === 1
+      ? "Seeing history like that... the structural barriers women fought through was eye-opening. But I can feel it—there's so much more history and activism left to fight for!"
+      : "Intersectionality changed everything! But as we move into the modern digital age, new technological barriers are rising. I can't stop now—I have to see how activism evolves in the digital era!";
 
   const stage = (
     <LivingRoomStage
-      fullscreen={!victory}
+      fullscreen={!victory && !stopped}
       tvOn={tvOn}
       actor={
-        <div className="absolute transition-all ease-out" style={{ transitionProperty: "left, bottom, height, transform", ...POSE[phase] }}>
-          <div key={phase === "seated" ? "s" : "o"} className={cn("h-full origin-bottom", phase === "seated" && "animate-plop")}>
-            <AvatarSprite avatar={avatar} alt={`${avatar.name} back home`} className="h-full drop-shadow-[4px_4px_0_var(--ink)]" />
+        <div
+          className="absolute transition-all ease-out"
+          style={{ transitionProperty: "left, bottom, height, transform", ...POSE[phase] }}
+        >
+          <div
+            key={phase === "seated" ? "s" : "o"}
+            className={cn("h-full origin-bottom", phase === "seated" && "animate-plop")}
+          >
+            <AvatarSprite
+              avatar={avatar}
+              alt={`${avatar.name} back home`}
+              className="h-full drop-shadow-[4px_4px_0_var(--ink)]"
+            />
           </div>
         </div>
       }
     >
       {showPortal && <TvVortex reverse={phase !== "leaving"} />}
-      {!victory && phase === "seated" && (
-        <div className="pixel-frame animate-pop-in absolute right-[4%] bottom-[4%] left-[4%] bg-lavender-night/95 px-4 py-3 text-center sm:right-[14%] sm:left-[14%]">
+      {!victory && !stopped && phase === "seated" && (
+        <div className="pixel-frame animate-pop-in absolute right-[4%] bottom-[4%] left-[4%] bg-lavender-night/95 px-4 py-3 text-center sm:right-[10%] sm:left-[10%]">
           <p className="font-pixel text-[10px] glow-gold sm:text-xs">
-            ACT {clearedAct.numeral} CLEAR · PORTAL TO ACT {nextAct?.numeral} UNLOCKED
+            ACT {clearedAct.numeral} CLEAR · ACT {nextAct?.numeral} UNLOCKED
           </p>
-          <p className="font-terminal mt-2 text-xl text-cream sm:text-2xl">
+          <p className="font-terminal mt-2 text-lg text-cream sm:text-2xl">
             <span className="text-neon-gold">{avatar.name}: </span>
-            Phew... home! But the TV is still glowing — the timeline isn't finished yet.
+            {homecomingDialogue}
           </p>
-          <PixelButton size="md" variant="gold" className="mt-3" onClick={leave} autoFocus>
-            JUMP INTO ACT {nextAct?.numeral} ▶
-          </PixelButton>
+          <div className="mt-3 flex flex-wrap justify-center gap-3">
+            <PixelButton size="md" variant="gold" onClick={leave} autoFocus>
+              CONTINUE TO ACT {nextAct?.numeral} ▶
+            </PixelButton>
+            <PixelButton size="md" variant="night" onClick={onStop}>
+              STOP HERE
+            </PixelButton>
+          </div>
         </div>
       )}
     </LivingRoomStage>
   );
 
-  if (!victory) {
+  if (!victory && !stopped) {
     return (
       <>
         {stage}
@@ -113,7 +144,7 @@ export function HomeScreen({ avatar, clearedAct, victory, stars, retries, onLeav
 
   return (
     <div className="relative min-h-screen overflow-hidden px-3 py-6 sm:px-6">
-      {phase === "seated" && (
+      {victory && phase === "seated" && (
         <div className="pointer-events-none fixed inset-0 z-[80]" aria-hidden>
           {confetti.map((c, i) => (
             <span
@@ -126,16 +157,19 @@ export function HomeScreen({ avatar, clearedAct, victory, stars, retries, onLeav
       )}
       <div className="mx-auto flex max-w-5xl flex-col gap-6">
         {stage}
-        <PixelWindow title="SIMULATION_BROKEN.EXE" className="w-full">
-          <h1 className="font-pixel text-center text-xl glow-pink sm:text-3xl">VICTORY — YOU'RE HOME!</h1>
+        <PixelWindow title={victory ? "FULL_JOURNEY_COMPLETE.EXE" : "CLOSING_CREDITS.EXE"} className="w-full">
+          <h1 className="font-pixel text-center text-xl glow-pink sm:text-3xl">
+            {victory ? "VICTORY!" : "THANK YOU FOR PLAYING"}
+          </h1>
           <p className="font-terminal mt-3 text-center text-2xl sm:text-3xl">
-            {avatar.name} walked a mile through every life stage, from 1950s toy shelves to the 2026
-            Digital Summit — proving the fight for equality evolves alongside us.
+            {victory
+              ? "You completed the full journey from historical suffrage to digital ethics. Equality evolves through continuous action!"
+              : "Thank you for walking a mile in her shoes!"}
           </p>
           <div className="mt-6 flex flex-wrap items-center justify-center gap-6">
-            <div className="flex gap-1">
+            <div className="flex gap-1" aria-label={`${Math.floor(stars / 4)} of ${TOTAL_ACTS} acts cleared`}>
               {Array.from({ length: TOTAL_ACTS }, (_, i) => (
-                <PixelHeart key={i} filled className="h-8 w-8" />
+                <PixelHeart key={i} filled={i < Math.floor(stars / 4)} className="h-8 w-8" />
               ))}
             </div>
             <div className="flex items-center gap-2">
@@ -145,18 +179,24 @@ export function HomeScreen({ avatar, clearedAct, victory, stars, retries, onLeav
             <span className="font-pixel text-[9px] text-lavender-deep">CONTINUES USED: {retries}</span>
           </div>
           <p className="font-pixel mt-4 text-center text-[10px] text-lavender-deep">RANK</p>
-          <p className="font-pixel mt-2 bg-lavender-night py-3 text-center text-sm glow-gold sm:text-base">{getRank(retries)}</p>
+          <p className="font-pixel mt-2 bg-lavender-night py-3 text-center text-sm glow-gold sm:text-base">
+            {getRank(retries)}
+          </p>
           <ol className="mt-6 grid gap-2 sm:grid-cols-3">
-            {ACTS.map((a) => (
-              <li key={a.number} className="border-l-8 border-neon-pink bg-pastel-pink/50 px-3 py-2">
-                <p className="font-pixel text-[8px] text-lavender-deep">ACT {a.numeral} · {a.era}</p>
-                <p className="font-terminal text-xl">{a.title}</p>
+            {ACTS.map((act) => (
+              <li key={act.number} className="border-l-8 border-neon-pink bg-pastel-pink/50 px-3 py-2">
+                <p className="font-pixel text-[8px] text-lavender-deep">
+                  ACT {act.numeral} · {act.era} · {act.number <= clearedAct.number ? "CLEARED" : "NOT PLAYED"}
+                </p>
+                <p className="font-terminal text-xl">{act.title}</p>
               </li>
             ))}
           </ol>
-          <p className="font-terminal mt-6 text-center text-2xl text-ink/80">
-            The next level is real life. What will you stand up for?
-          </p>
+          {victory && (
+            <p className="font-terminal mt-6 text-center text-2xl text-ink/80">
+              The next level is real life. What will you stand up for?
+            </p>
+          )}
           <div className="mt-6 flex justify-center">
             <PixelButton size="lg" variant="gold" onClick={onReplay}>↻ PLAY AGAIN</PixelButton>
           </div>

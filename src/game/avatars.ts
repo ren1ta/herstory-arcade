@@ -1,7 +1,7 @@
-import scarletAsset from "@/assets/avatar-scarlet.png.asset.json";
-import novaAsset from "@/assets/avatar-nova.png.asset.json";
-import miraAsset from "@/assets/avatar-mira.png.asset.json";
-import ivyAsset from "@/assets/avatar-ivy.png.asset.json";
+import scarletSprite from "@/assets/avatar-scarlet.png";
+import silverSprite from "@/assets/avatar-silver.png";
+import jadeSprite from "@/assets/avatar-jade.png";
+import walkerSprite from "@/assets/avatar-walker.png";
 
 export type AvatarId = string;
 
@@ -19,46 +19,46 @@ export interface Avatar {
   custom?: boolean;
 }
 
-/** Renita's own pixel avatars. */
+/** Bundled pixel avatars, so the selection screen works without remote asset hosting. */
 export const AVATARS: Avatar[] = [
+  {
+    id: "iris",
+    name: "IRIS",
+    title: "The Equality Explorer",
+    tagline: "Steps into history and chooses a bolder future.",
+    src: walkerSprite,
+    width: 250,
+    height: 250,
+    frames: 1,
+  },
   {
     id: "scarlet",
     name: "SCARLET",
     title: "The Red-Haired Rebel",
     tagline: "Fearless explorer of forgotten history.",
-    src: scarletAsset.url,
-    width: 165,
-    height: 230,
+    src: scarletSprite,
+    width: 250,
+    height: 250,
     frames: 1,
   },
   {
-    id: "nova",
-    name: "NOVA",
-    title: "Cyber Heroine",
-    tagline: "Hacks the system. Rewrites the code.",
-    src: novaAsset.url,
-    width: 200,
-    height: 230,
+    id: "silver",
+    name: "SILVER",
+    title: "The Silver-Haired Rebel",
+    tagline: "Steps into history and chooses a bolder future.",
+    src: silverSprite,
+    width: 250,
+    height: 250,
     frames: 1,
   },
   {
-    id: "mira",
-    name: "MIRA",
-    title: "Classic Pixel Hero",
-    tagline: "Asks the questions nobody else will.",
-    src: miraAsset.url,
-    width: 399,
-    height: 634,
-    frames: 1,
-  },
-  {
-    id: "ivy",
-    name: "IVY",
-    title: "The Eco Guardian",
+    id: "jade",
+    name: "JADE",
+    title: "The Green Guardian",
     tagline: "Grows change from the roots up.",
-    src: ivyAsset.url,
-    width: 180,
-    height: 230,
+    src: jadeSprite,
+    width: 250,
+    height: 250,
     frames: 1,
   },
 ];

@@ -17,12 +17,12 @@ export function TitleScreen({ onStart }: { onStart: () => void }) {
       </div>
 
       <p className="font-pixel relative mb-6 text-[10px] text-neon-cyan sm:text-xs">
-        ★ WALK A MILE IN HER SHOES ★
+        ★ 8-BIT EQUALITY ★
       </p>
       <h1 className="font-pixel relative text-3xl leading-snug text-cream pixel-text-shadow sm:text-5xl md:text-6xl">
-        8-BIT
+        WALK A MILE
         <br />
-        <span className="glow-pink">EQUALITY</span>
+        <span className="glow-pink">IN HER SHOES</span>
       </h1>
       <p className="font-terminal relative mt-6 max-w-xl text-2xl text-pastel-pink sm:text-3xl">
         Three timelines. Four life stages each. One bold choice at a time.
