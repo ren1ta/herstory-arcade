@@ -1,9 +1,9 @@
 import type { CSSProperties } from "react";
-import type { Avatar } from "@/game/avatars";
+import type { AvatarLook } from "@/game/avatars";
 import { cn } from "@/lib/utils";
 
 interface AvatarSpriteProps {
-  avatar: Avatar;
+  avatar: AvatarLook;
   /** Cycle through sprite-sheet frames (walk cycle). Ignored for single sprites. */
   animate?: boolean;
   className?: string | undefined;

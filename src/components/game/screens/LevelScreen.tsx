@@ -68,7 +68,7 @@ export function LevelScreen({ level, avatar, onChoose }: LevelScreenProps) {
             className="h-full drop-shadow-[5px_5px_0_var(--ink)]"
           />
         </div>
-        <div className="flex h-40 items-end sm:h-56">
+        <div className="animate-idle-bob flex h-40 items-end sm:h-56 [animation-delay:-0.7s]">
           <img
             src={level.npc.sprite}
             alt={level.npc.name}
@@ -76,19 +76,8 @@ export function LevelScreen({ level, avatar, onChoose }: LevelScreenProps) {
             height={250}
             draggable={false}
             className="h-full w-auto object-contain drop-shadow-[5px_5px_0_var(--ink)] [image-rendering:pixelated]"
-            style={{ filter: "url(#remove-npc-magenta)" }}
           />
         </div>
-        <svg className="absolute h-0 w-0" aria-hidden>
-          <defs>
-            <filter id="remove-npc-magenta">
-              <feColorMatrix
-                type="matrix"
-                values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  -0.8 1.6 -0.8 0 1"
-              />
-            </filter>
-          </defs>
-        </svg>
         <div className="font-pixel absolute top-3 left-3 bg-ink/80 px-2 py-1 text-[8px] text-neon-gold sm:text-[10px]">
           {level.place} · {level.year}
         </div>

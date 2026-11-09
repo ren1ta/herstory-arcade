@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useReducer } from "react";
-import { DEFAULT_AVATAR, type Avatar } from "@/game/avatars";
+import { DEFAULT_AVATAR, type AvatarLook } from "@/game/avatars";
 import { LEVELS, getAct, type ChoiceKey } from "@/game/story";
 import {
   MAX_STARS,
@@ -36,7 +36,10 @@ export function Game() {
     preloadSounds();
     dispatch({ type: "START" });
   }, []);
-  const selectAvatar = useCallback((a: Avatar) => dispatch({ type: "SELECT_AVATAR", avatar: a }), []);
+  const selectAvatar = useCallback(
+    (look: AvatarLook, name: string) => dispatch({ type: "SELECT_AVATAR", look, name }),
+    [],
+  );
   const cinematicDone = useCallback(() => dispatch({ type: "CINEMATIC_DONE" }), []);
   const arrivalDone = useCallback(() => dispatch({ type: "ARRIVAL_DONE" }), []);
   const beginAct = useCallback(() => dispatch({ type: "BEGIN_ACT" }), []);
@@ -59,11 +62,6 @@ export function Game() {
 
   return (
     <main className="relative min-h-screen">
-      <header className="pointer-events-none fixed inset-x-0 top-2 z-[100] text-center">
-        <span className="font-pixel bg-lavender-night/90 px-3 py-1 text-[9px] text-neon-cyan pixel-text-shadow sm:text-[10px]">
-          8-Bit Equality
-        </span>
-      </header>
       {state.screen === "title" && <TitleScreen onStart={start} />}
       {state.screen !== "title" && (
         <PixelButton

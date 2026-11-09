@@ -5,9 +5,9 @@ import walkerSprite from "@/assets/avatar-walker.png";
 
 export type AvatarId = string;
 
-export interface Avatar {
+/** A sprite the player can pick. It has no name — the player names their hero after picking. */
+export interface AvatarLook {
   id: AvatarId;
-  name: string;
   title: string;
   tagline: string;
   src: string;
@@ -19,11 +19,28 @@ export interface Avatar {
   custom?: boolean;
 }
 
+/** The player's hero: a picked sprite plus the name the player typed. */
+export interface Avatar extends AvatarLook {
+  name: string;
+}
+
+export const HERO_NAME_MAX = 12;
+export const FALLBACK_HERO_NAME = "HERO";
+
+/** Trims, collapses spaces, upper-cases and caps the player's typed name; blank becomes "HERO". */
+export function cleanHeroName(raw: string): string {
+  const name = raw.replace(/\s+/g, " ").trim().toUpperCase().slice(0, HERO_NAME_MAX).trim();
+  return name || FALLBACK_HERO_NAME;
+}
+
+export function nameAvatar(look: AvatarLook, rawName: string): Avatar {
+  return { ...look, name: cleanHeroName(rawName) };
+}
+
 /** Bundled pixel avatars, so the selection screen works without remote asset hosting. */
-export const AVATARS: Avatar[] = [
+export const AVATARS: AvatarLook[] = [
   {
     id: "silver",
-    name: "SILVER",
     title: "The Double-Bun Trailblazer",
     tagline: "Fiery, sharp-witted, unapologetically direct.",
     src: silverSprite,
@@ -33,7 +50,6 @@ export const AVATARS: Avatar[] = [
   },
   {
     id: "scarlet",
-    name: "SCARLET",
     title: "The Red-Haired Rebel",
     tagline: "Strategic, composed, fierce.",
     src: scarletSprite,
@@ -43,7 +59,6 @@ export const AVATARS: Avatar[] = [
   },
   {
     id: "iris",
-    name: "IRIS",
     title: "The Pink-Ponytail Explorer",
     tagline: "Optimistic, expressive, deeply empathetic.",
     src: walkerSprite,
@@ -53,7 +68,6 @@ export const AVATARS: Avatar[] = [
   },
   {
     id: "jade",
-    name: "SILVER BRAID",
     title: "The Emerald Guardian",
     tagline: "Cool, observant, grounded.",
     src: jadeSprite,
@@ -63,4 +77,4 @@ export const AVATARS: Avatar[] = [
   },
 ];
 
-export const DEFAULT_AVATAR: Avatar = AVATARS.find((avatar) => avatar.id === "iris")!;
+export const DEFAULT_AVATAR: Avatar = nameAvatar(AVATARS.find((avatar) => avatar.id === "iris")!, "IRIS");
