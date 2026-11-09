@@ -59,11 +59,6 @@ export function Game() {
 
   return (
     <main className="relative min-h-screen">
-      <header className="pointer-events-none fixed inset-x-0 top-2 z-[100] text-center">
-        <span className="font-pixel bg-lavender-night/90 px-3 py-1 text-[9px] text-neon-cyan pixel-text-shadow sm:text-[10px]">
-          8-Bit Equality
-        </span>
-      </header>
       {state.screen === "title" && <TitleScreen onStart={start} />}
       {state.screen !== "title" && (
         <PixelButton
