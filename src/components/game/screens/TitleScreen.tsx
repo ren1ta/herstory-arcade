@@ -24,9 +24,14 @@ export function TitleScreen({ onStart }: { onStart: () => void }) {
         <br />
         <span className="glow-pink">IN HER SHOES</span>
       </h1>
-      <p className="font-terminal relative mt-6 max-w-xl text-2xl text-pastel-pink sm:text-3xl">
-        Three timelines. Four life stages each. One bold choice at a time.
-      </p>
+      <figure className="relative mt-6 max-w-2xl">
+        <blockquote className="font-terminal text-2xl text-pastel-pink sm:text-3xl">
+          "Every time a woman stands up for herself, she stands up for all the women."
+        </blockquote>
+        <figcaption className="font-terminal mt-2 text-xl text-neon-gold sm:text-2xl">
+          — Maya Angelou
+        </figcaption>
+      </figure>
 
       <div className="relative mt-10 flex items-end gap-5 sm:gap-8" aria-hidden>
         {AVATARS.map((a, i) => (
