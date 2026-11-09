@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
-import { AVATARS, type Avatar } from "@/game/avatars";
+import { AVATARS, HERO_NAME_MAX, type AvatarLook } from "@/game/avatars";
 import {
   addCustomAvatar,
   createCustomAvatar,
@@ -18,7 +18,7 @@ import { AvatarSprite } from "../AvatarSprite";
 const FRAME_OPTIONS = [1, 2, 3, 4, 6, 8];
 
 /** Sliding sideways carousel of avatars, with a final "upload your own sprite" card. */
-export function AvatarSelect({ onConfirm }: { onConfirm: (avatar: Avatar) => void }) {
+export function AvatarSelect({ onConfirm }: { onConfirm: (look: AvatarLook, name: string) => void }) {
   const custom = useCustomAvatars();
   const hiddenAvatarIds = useHiddenAvatars();
   const avatars = useMemo(
@@ -33,6 +33,8 @@ export function AvatarSelect({ onConfirm }: { onConfirm: (avatar: Avatar) => voi
   const [busy, setBusy] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
   const swipeX = useRef<number | null>(null);
+  /** The sprite picked in the carousel, waiting for the player to type a name. */
+  const [naming, setNaming] = useState<AvatarLook | null>(null);
 
   const current = avatars[index] ?? null;
 
@@ -60,9 +62,9 @@ export function AvatarSelect({ onConfirm }: { onConfirm: (avatar: Avatar) => voi
     if (key === "arrowright") go(index + 1);
     if (key === "enter" && current) {
       playSound("click");
-      onConfirm(current);
+      setNaming(current);
     }
-  });
+  }, !naming);
 
   const onFile = async (file: File | undefined) => {
     if (!file) return;
@@ -90,6 +92,10 @@ export function AvatarSelect({ onConfirm }: { onConfirm: (avatar: Avatar) => voi
       setError(e instanceof Error ? e.message : "The avatar could not be removed.");
     }
   };
+
+  if (naming) {
+    return <NameHero look={naming} onBack={() => setNaming(null)} onConfirm={(name) => onConfirm(naming, name)} />;
+  }
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-center px-4 py-16">
@@ -125,7 +131,7 @@ export function AvatarSelect({ onConfirm }: { onConfirm: (avatar: Avatar) => voi
                     type="button"
                     role="option"
                     aria-selected={active}
-                    onClick={() => (active ? onConfirm(a) : go(i))}
+                    onClick={() => (active ? setNaming(a) : go(i))}
                     className={cn(
                       "relative flex h-full w-full flex-col items-center p-4 transition-all duration-300 focus-visible:outline-none",
                       active
@@ -138,23 +144,22 @@ export function AvatarSelect({ onConfirm }: { onConfirm: (avatar: Avatar) => voi
                         <AvatarSprite
                           avatar={a}
                           animate={active}
-                          alt={`${a.name}, ${a.title}`}
+                          alt={a.title}
                           className="h-full drop-shadow-[4px_4px_0_var(--ink)]"
                         />
                       </div>
                     </div>
-                    <p className={cn("font-pixel mt-4 text-xs", active ? "glow-pink" : "text-lavender-deep")}>
+                    <p className={cn("font-pixel mt-4 text-[10px] leading-relaxed", active ? "glow-pink" : "text-lavender-deep")}>
                       {active ? "▶ " : ""}
-                      {a.name}
+                      {a.title}
                     </p>
-                    <p className={cn("font-pixel mt-2 text-[8px]", active ? "text-neon-cyan" : "")}>{a.title}</p>
                     <p className="font-terminal mt-2 text-xl leading-tight">{a.tagline}</p>
                   </button>
                   {active && (
                     <button
                       type="button"
                       onClick={() => onRemove(a.id)}
-                      aria-label={`Remove ${a.name} from the avatar list`}
+                      aria-label={`Remove ${a.title} from the avatar list`}
                       className="font-pixel absolute top-2 right-5 bg-ink px-2 py-1 text-[8px] text-cream hover:text-neon-pink"
                     >
                       ✕ REMOVE / DELETE
@@ -236,11 +241,89 @@ export function AvatarSelect({ onConfirm }: { onConfirm: (avatar: Avatar) => voi
         {error && <p role="status" className="font-terminal mt-3 text-center text-lg text-destructive">{error}</p>}
 
         <div className="mt-6 flex justify-center">
-          <PixelButton size="lg" variant="gold" disabled={!current} onClick={() => current && onConfirm(current)}>
-            {current ? `PLAY AS ${current.name} ▶` : "UPLOAD A SPRITE FIRST"}
+          <PixelButton size="lg" variant="gold" disabled={!current} onClick={() => current && setNaming(current)}>
+            {current ? "PICK THIS HERO ▶" : "UPLOAD A SPRITE FIRST"}
           </PixelButton>
         </div>
         <p className="font-pixel mt-4 text-center text-[8px] text-lavender-deep">◀ ▶ ARROW KEYS OR SWIPE · ENTER TO PICK</p>
+      </PixelWindow>
+    </div>
+  );
+}
+
+/** Second step: the player types any name they like for the hero they picked. */
+function NameHero({
+  look,
+  onBack,
+  onConfirm,
+}: {
+  look: AvatarLook;
+  onBack: () => void;
+  onConfirm: (name: string) => void;
+}) {
+  const [name, setName] = useState("");
+  const ready = name.trim().length > 0;
+
+  return (
+    <div className="flex min-h-screen flex-col items-center justify-center px-4 py-16">
+      <PixelWindow title="WALK A MILE IN HER SHOES · NAME YOUR HERO" className="w-full max-w-2xl">
+        <h1 className="font-pixel text-center text-sm text-lavender-deep sm:text-lg">NAME YOUR HERO</h1>
+        <p className="font-terminal mt-2 text-center text-2xl text-ink/80">Give her any name you like.</p>
+
+        <div className="mt-6 flex flex-col items-center gap-6 sm:flex-row sm:items-center">
+          <div className="pixel-frame-glow flex h-48 w-48 shrink-0 items-end justify-center bg-lavender-night p-3">
+            <div className="h-full animate-idle-bob">
+              <AvatarSprite
+                avatar={look}
+                animate
+                alt={look.title}
+                className="h-full drop-shadow-[4px_4px_0_var(--ink)]"
+              />
+            </div>
+          </div>
+
+          <form
+            className="flex w-full flex-col gap-3"
+            onSubmit={(e) => {
+              e.preventDefault();
+              if (!ready) return;
+              playSound("click");
+              onConfirm(name);
+            }}
+          >
+            <p className="font-pixel text-[10px] text-neon-pink">{look.title}</p>
+            <p className="font-terminal text-xl leading-tight text-ink/80">{look.tagline}</p>
+            <label htmlFor="hero-name" className="font-pixel mt-2 text-[9px] text-lavender-deep">
+              HERO NAME
+            </label>
+            <input
+              id="hero-name"
+              autoFocus
+              autoComplete="off"
+              spellCheck={false}
+              maxLength={HERO_NAME_MAX}
+              value={name}
+              placeholder="TYPE A NAME"
+              onChange={(e) => {
+                setName(e.target.value);
+                playSound("blip");
+              }}
+              className="pixel-inset font-pixel w-full bg-cream px-3 py-3 text-sm uppercase text-ink placeholder:text-ink/40 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-neon-cyan"
+            />
+            <p className="font-pixel text-right text-[8px] text-lavender-deep">
+              {name.length}/{HERO_NAME_MAX}
+            </p>
+            <div className="mt-1 flex flex-wrap justify-between gap-3">
+              <PixelButton type="button" size="sm" variant="night" onClick={onBack}>
+                ◀ BACK
+              </PixelButton>
+              <PixelButton type="submit" size="md" variant="gold" disabled={!ready} silent>
+                PLAY AS {ready ? name.trim().toUpperCase() : "…"} ▶
+              </PixelButton>
+            </div>
+          </form>
+        </div>
+        <p className="font-pixel mt-6 text-center text-[8px] text-lavender-deep">TYPE A NAME · ENTER TO START</p>
       </PixelWindow>
     </div>
   );
