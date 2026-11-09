@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { AVATARS } from "@/game/avatars";
+import { AVATARS, DEFAULT_AVATAR } from "@/game/avatars";
 import { LEVELS, type ChoiceKey } from "@/game/story";
 import {
   MAX_STARS,
@@ -28,6 +28,35 @@ function toFirstLevel(): GameState {
 }
 
 describe("game rules", () => {
+  it("keeps the built-in avatar roster aligned with the four sprite descriptions", () => {
+    expect(AVATARS.map((avatar) => avatar.id)).toEqual(["silver", "scarlet", "iris", "jade"]);
+    expect(AVATARS.map((avatar) => avatar.tagline)).toEqual([
+      "Fiery, sharp-witted, unapologetically direct.",
+      "Strategic, composed, fierce.",
+      "Optimistic, expressive, deeply empathetic.",
+      "Cool, observant, grounded.",
+    ]);
+    expect(AVATARS[3]?.name).toBe("SILVER BRAID");
+    expect(DEFAULT_AVATAR.id).toBe("iris");
+  });
+
+  it("keeps custom avatar names and personalities through game transitions", () => {
+    const customAvatar = {
+      ...AVATARS[0]!,
+      id: "custom-test",
+      name: "Nova",
+      tagline: "Curious, brave, and kind.",
+      custom: true,
+    };
+    let s = gameReducer(initialState(), { type: "SELECT_AVATAR", avatar: customAvatar });
+    expect(s.avatar).toEqual(customAvatar);
+    s = gameReducer(s, { type: "CINEMATIC_DONE" });
+    s = gameReducer(s, { type: "ARRIVAL_DONE" });
+    s = gameReducer(s, { type: "BEGIN_ACT" });
+    expect(s.avatar?.name).toBe("Nova");
+    expect(s.avatar?.tagline).toBe("Curious, brave, and kind.");
+  });
+
   it("has 3 stories of 4 life-stage levels = 12 levels/stars", () => {
     expect(LEVELS).toHaveLength(12);
     expect(MAX_STARS).toBe(12);

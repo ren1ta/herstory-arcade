@@ -99,9 +99,18 @@ function loadImage(file: File): Promise<HTMLImageElement> {
 }
 
 /** Reads an uploaded image (single sprite or horizontal sprite sheet) into an Avatar. */
-export async function createCustomAvatar(file: File, frames: number): Promise<Avatar> {
+export async function createCustomAvatar(
+  file: File,
+  frames: number,
+  customName?: string,
+  personality?: string,
+): Promise<Avatar> {
   if (!file.type.startsWith("image/")) throw new Error("Please choose a PNG, GIF or JPG image.");
   if (file.size > MAX_FILE_BYTES) throw new Error("That image is over 5 MB — try a smaller one.");
+  const name = customName?.trim() || nameFromFile(file.name);
+  const tagline = personality?.trim() || "Your very own pixel hero.";
+  if (name.length > 24) throw new Error("Character names must be 24 characters or fewer.");
+  if (tagline.length > 120) throw new Error("Personality descriptions must be 120 characters or fewer.");
   const img = await loadImage(file);
   const scale = Math.min(1, MAX_SIDE / Math.max(img.naturalWidth, img.naturalHeight));
   const width = Math.max(1, Math.round(img.naturalWidth * scale));
@@ -117,9 +126,9 @@ export async function createCustomAvatar(file: File, frames: number): Promise<Av
   const safeFrames = Math.min(12, Math.max(1, Math.round(frames)));
   return {
     id: `custom-${Date.now().toString(36)}`,
-    name: nameFromFile(file.name),
+    name,
     title: safeFrames > 1 ? `Custom Sprite · ${safeFrames} frames` : "Custom Sprite",
-    tagline: "Your very own pixel hero.",
+    tagline,
     src: canvas.toDataURL("image/png"),
     width,
     height,

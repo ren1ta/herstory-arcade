@@ -22,11 +22,11 @@ export interface Avatar {
 /** Bundled pixel avatars, so the selection screen works without remote asset hosting. */
 export const AVATARS: Avatar[] = [
   {
-    id: "iris",
-    name: "IRIS",
-    title: "The Equality Explorer",
-    tagline: "Steps into history and chooses a bolder future.",
-    src: walkerSprite,
+    id: "silver",
+    name: "SILVER",
+    title: "The Double-Bun Trailblazer",
+    tagline: "Fiery, sharp-witted, unapologetically direct.",
+    src: silverSprite,
     width: 250,
     height: 250,
     frames: 1,
@@ -35,27 +35,27 @@ export const AVATARS: Avatar[] = [
     id: "scarlet",
     name: "SCARLET",
     title: "The Red-Haired Rebel",
-    tagline: "Fearless explorer of forgotten history.",
+    tagline: "Strategic, composed, fierce.",
     src: scarletSprite,
     width: 250,
     height: 250,
     frames: 1,
   },
   {
-    id: "silver",
-    name: "SILVER",
-    title: "The Silver-Haired Rebel",
-    tagline: "Steps into history and chooses a bolder future.",
-    src: silverSprite,
+    id: "iris",
+    name: "IRIS",
+    title: "The Pink-Ponytail Explorer",
+    tagline: "Optimistic, expressive, deeply empathetic.",
+    src: walkerSprite,
     width: 250,
     height: 250,
     frames: 1,
   },
   {
     id: "jade",
-    name: "JADE",
-    title: "The Green Guardian",
-    tagline: "Grows change from the roots up.",
+    name: "SILVER BRAID",
+    title: "The Emerald Guardian",
+    tagline: "Cool, observant, grounded.",
     src: jadeSprite,
     width: 250,
     height: 250,
@@ -63,4 +63,4 @@ export const AVATARS: Avatar[] = [
   },
 ];
 
-export const DEFAULT_AVATAR: Avatar = AVATARS[0]!;
+export const DEFAULT_AVATAR: Avatar = AVATARS.find((avatar) => avatar.id === "iris")!;

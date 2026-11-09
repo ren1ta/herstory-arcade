@@ -29,6 +29,8 @@ export function AvatarSelect({ onConfirm }: { onConfirm: (avatar: Avatar) => voi
   const [index, setIndex] = useState(0);
   const [pendingId, setPendingId] = useState<string | null>(null);
   const [frames, setFrames] = useState(1);
+  const [customName, setCustomName] = useState("");
+  const [personality, setPersonality] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
@@ -67,11 +69,18 @@ export function AvatarSelect({ onConfirm }: { onConfirm: (avatar: Avatar) => voi
   const onFile = async (file: File | undefined) => {
     if (!file) return;
     setError(null);
+    if (!customName.trim() || !personality.trim()) {
+      setError("Enter a character name and personality description before adding the sprite.");
+      if (fileRef.current) fileRef.current.value = "";
+      return;
+    }
     setBusy(true);
     try {
-      const avatar = await createCustomAvatar(file, frames);
+      const avatar = await createCustomAvatar(file, frames, customName, personality);
       addCustomAvatar(avatar);
       setPendingId(avatar.id);
+      setCustomName("");
+      setPersonality("");
       playSound("levelup");
     } catch (e) {
       setError(e instanceof Error ? e.message : "Something went wrong reading that image.");
@@ -101,7 +110,7 @@ export function AvatarSelect({ onConfirm }: { onConfirm: (avatar: Avatar) => voi
         </p>
 
         <div
-          className="relative mt-6 h-[400px] overflow-hidden sm:h-[430px]"
+          className="relative mt-6 h-[520px] overflow-hidden sm:h-[500px]"
           style={{ ["--slide" as string]: "min(64vw, 280px)" }}
           role="listbox"
           aria-label="Avatars"
@@ -125,7 +134,7 @@ export function AvatarSelect({ onConfirm }: { onConfirm: (avatar: Avatar) => voi
                     type="button"
                     role="option"
                     aria-selected={active}
-                    onClick={() => (active ? onConfirm(a) : go(i))}
+                    onClick={() => go(i)}
                     className={cn(
                       "relative flex h-full w-full flex-col items-center p-4 transition-all duration-300 focus-visible:outline-none",
                       active
@@ -148,7 +157,8 @@ export function AvatarSelect({ onConfirm }: { onConfirm: (avatar: Avatar) => voi
                       {a.name}
                     </p>
                     <p className={cn("font-pixel mt-2 text-[8px]", active ? "text-neon-cyan" : "")}>{a.title}</p>
-                    <p className="font-terminal mt-2 text-xl leading-tight">{a.tagline}</p>
+                    <p className="font-pixel mt-3 text-[8px] text-neon-gold">PERSONALITY</p>
+                    <p className="font-terminal mt-1 text-xl leading-tight">{a.tagline}</p>
                   </button>
                   {active && (
                     <button
@@ -168,7 +178,7 @@ export function AvatarSelect({ onConfirm }: { onConfirm: (avatar: Avatar) => voi
             <div className="h-full shrink-0 px-3" style={{ width: "var(--slide)" }}>
               <div
                 className={cn(
-                  "flex h-full w-full flex-col items-center justify-center gap-3 border-4 border-dashed border-lavender-deep p-4 text-center transition-all duration-300",
+                  "flex h-full w-full flex-col items-center justify-center gap-2 border-4 border-dashed border-lavender-deep p-3 text-center transition-all duration-300",
                   index === avatars.length ? "bg-cream" : "scale-90 bg-pastel-pink opacity-60",
                 )}
                 onClick={() => index !== avatars.length && go(avatars.length)}
@@ -178,6 +188,30 @@ export function AvatarSelect({ onConfirm }: { onConfirm: (avatar: Avatar) => voi
                 <p className="font-terminal text-lg leading-tight">
                   PNG or GIF with a transparent background works best. Sprite sheet? Pick its frame count.
                 </p>
+                <label className="font-pixel w-full text-left text-[8px] text-lavender-deep">
+                  CHARACTER NAME
+                  <input
+                    type="text"
+                    value={customName}
+                    maxLength={24}
+                    onChange={(e) => setCustomName(e.target.value)}
+                    onClick={(e) => e.stopPropagation()}
+                    placeholder="Your hero's name"
+                    className="font-terminal mt-1 w-full border-2 border-lavender-deep bg-cream px-2 py-1 text-lg text-ink focus:outline-2 focus:outline-neon-cyan"
+                  />
+                </label>
+                <label className="font-pixel w-full text-left text-[8px] text-lavender-deep">
+                  PERSONALITY
+                  <textarea
+                    value={personality}
+                    maxLength={120}
+                    rows={2}
+                    onChange={(e) => setPersonality(e.target.value)}
+                    onClick={(e) => e.stopPropagation()}
+                    placeholder="Describe your character"
+                    className="font-terminal mt-1 w-full resize-none border-2 border-lavender-deep bg-cream px-2 py-1 text-base leading-tight text-ink focus:outline-2 focus:outline-neon-cyan"
+                  />
+                </label>
                 <label className="font-pixel flex items-center gap-2 text-[8px]">
                   FRAMES
                   <select
@@ -199,7 +233,15 @@ export function AvatarSelect({ onConfirm }: { onConfirm: (avatar: Avatar) => voi
                   className="hidden"
                   onChange={(e) => void onFile(e.target.files?.[0])}
                 />
-                <PixelButton size="sm" variant="cyan" disabled={busy} onClick={() => fileRef.current?.click()}>
+                <PixelButton
+                  size="sm"
+                  variant="cyan"
+                  disabled={busy}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    fileRef.current?.click();
+                  }}
+                >
                   {busy ? "LOADING…" : "CHOOSE IMAGE"}
                 </PixelButton>
               </div>
