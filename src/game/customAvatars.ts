@@ -1,5 +1,5 @@
 import { useSyncExternalStore } from "react";
-import type { Avatar } from "./avatars";
+import type { AvatarLook } from "./avatars";
 
 /** Player-uploaded sprites, kept in this browser so the exhibition laptop remembers them. */
 const STORAGE_KEY = "eight-bit-equality-avatars";
@@ -7,9 +7,9 @@ const HIDDEN_AVATARS_KEY = "wamihs-hidden-avatars";
 const MAX_CUSTOM = 6;
 const MAX_FILE_BYTES = 5 * 1024 * 1024;
 const MAX_SIDE = 1024;
-const EMPTY: Avatar[] = [];
+const EMPTY: AvatarLook[] = [];
 
-let list: Avatar[] = EMPTY;
+let list: AvatarLook[] = EMPTY;
 let loaded = false;
 let hiddenAvatarIds: string[] = [];
 let hiddenLoaded = false;
@@ -20,7 +20,7 @@ function load() {
   loaded = true;
   try {
     const raw = window.localStorage.getItem(STORAGE_KEY);
-    const parsed = raw ? (JSON.parse(raw) as Avatar[]) : [];
+    const parsed = raw ? (JSON.parse(raw) as AvatarLook[]) : [];
     list = Array.isArray(parsed) ? parsed.filter((a) => a && typeof a.src === "string") : [];
   } catch {
     list = [];
@@ -41,7 +41,7 @@ function loadHiddenAvatars() {
   }
 }
 
-function save(next: Avatar[]) {
+function save(next: AvatarLook[]) {
   window.localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
   list = next;
   for (const l of listeners) l();
@@ -53,7 +53,7 @@ function saveHiddenAvatars(next: string[]) {
   for (const l of listeners) l();
 }
 
-export function useCustomAvatars(): Avatar[] {
+export function useCustomAvatars(): AvatarLook[] {
   return useSyncExternalStore(
     (cb) => {
       load();
@@ -83,11 +83,6 @@ export function useHiddenAvatars(): string[] {
   );
 }
 
-function nameFromFile(fileName: string): string {
-  const base = fileName.replace(/\.[^.]+$/, "").replace(/[^a-z0-9 ]/gi, " ").trim();
-  return (base || "PLAYER").toUpperCase().slice(0, 10);
-}
-
 function loadImage(file: File): Promise<HTMLImageElement> {
   return new Promise((resolve, reject) => {
     const url = URL.createObjectURL(file);
@@ -99,7 +94,7 @@ function loadImage(file: File): Promise<HTMLImageElement> {
 }
 
 /** Reads an uploaded image (single sprite or horizontal sprite sheet) into an Avatar. */
-export async function createCustomAvatar(file: File, frames: number): Promise<Avatar> {
+export async function createCustomAvatar(file: File, frames: number): Promise<AvatarLook> {
   if (!file.type.startsWith("image/")) throw new Error("Please choose a PNG, GIF or JPG image.");
   if (file.size > MAX_FILE_BYTES) throw new Error("That image is over 5 MB — try a smaller one.");
   const img = await loadImage(file);
@@ -117,9 +112,8 @@ export async function createCustomAvatar(file: File, frames: number): Promise<Av
   const safeFrames = Math.min(12, Math.max(1, Math.round(frames)));
   return {
     id: `custom-${Date.now().toString(36)}`,
-    name: nameFromFile(file.name),
     title: safeFrames > 1 ? `Custom Sprite · ${safeFrames} frames` : "Custom Sprite",
-    tagline: "Your very own pixel hero.",
+    tagline: "Your very own pixel hero, drawn by you.",
     src: canvas.toDataURL("image/png"),
     width,
     height,
@@ -128,7 +122,7 @@ export async function createCustomAvatar(file: File, frames: number): Promise<Av
   };
 }
 
-export function addCustomAvatar(avatar: Avatar) {
+export function addCustomAvatar(avatar: AvatarLook) {
   load();
   if (list.length >= MAX_CUSTOM) throw new Error(`You can keep up to ${MAX_CUSTOM} custom avatars. Remove one before adding another.`);
   const next = [...list, avatar];

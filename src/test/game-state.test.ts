@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { AVATARS } from "@/game/avatars";
+import { AVATARS, cleanHeroName } from "@/game/avatars";
 import { LEVELS, type ChoiceKey } from "@/game/story";
 import {
   MAX_STARS,
@@ -20,7 +20,7 @@ function wrongKey(i: number): ChoiceKey {
 function toFirstLevel(): GameState {
   let s = initialState();
   s = gameReducer(s, { type: "START" });
-  s = gameReducer(s, { type: "SELECT_AVATAR", avatar: AVATARS[0]! });
+  s = gameReducer(s, { type: "SELECT_AVATAR", look: AVATARS[0]!, name: "Renita" });
   s = gameReducer(s, { type: "CINEMATIC_DONE" });
   expect(s.screen).toBe("arrival");
   s = gameReducer(s, { type: "ARRIVAL_DONE" });
@@ -118,5 +118,24 @@ describe("game rules", () => {
     expect(s.screen).toBe("victory");
     expect(countStars(s)).toBe(12);
     expect(countHearts(s)).toBe(3);
+  });
+});
+
+describe("hero naming", () => {
+  it("uses the name the player typed for the picked sprite", () => {
+    let s = gameReducer(initialState(), { type: "START" });
+    s = gameReducer(s, { type: "SELECT_AVATAR", look: AVATARS[1]!, name: "  priya  " });
+    expect(s.avatar?.name).toBe("PRIYA");
+    expect(s.avatar?.id).toBe(AVATARS[1]!.id);
+    expect(s.screen).toBe("cinematic");
+  });
+
+  it("caps names at 12 characters and falls back to HERO when blank", () => {
+    expect(cleanHeroName("abcdefghijklmnop")).toBe("ABCDEFGHIJKL");
+    expect(cleanHeroName("   ")).toBe("HERO");
+  });
+
+  it("built-in avatars come without names", () => {
+    for (const a of AVATARS) expect("name" in a).toBe(false);
   });
 });
