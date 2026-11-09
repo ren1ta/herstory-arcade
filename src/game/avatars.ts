@@ -40,36 +40,36 @@ export function nameAvatar(look: AvatarLook, rawName: string): Avatar {
 /** Bundled pixel avatars, so the selection screen works without remote asset hosting. */
 export const AVATARS: AvatarLook[] = [
   {
-    id: "iris",
-    title: "The Dreamer",
-    tagline: "Pink ponytail, big green eyes and a head full of questions about how things could be fairer.",
-    src: walkerSprite,
-    width: 250,
-    height: 250,
-    frames: 1,
-  },
-  {
-    id: "scarlet",
-    title: "The Firebrand",
-    tagline: "Flame-red hair and a fierce stare — she never stays quiet when something is unfair.",
-    src: scarletSprite,
-    width: 250,
-    height: 250,
-    frames: 1,
-  },
-  {
     id: "silver",
-    title: "The Strategist",
-    tagline: "Silver buns and a red hoodie — calm, clever, always three moves ahead.",
+    title: "The Double-Bun Trailblazer",
+    tagline: "Fiery, sharp-witted, unapologetically direct.",
     src: silverSprite,
     width: 250,
     height: 250,
     frames: 1,
   },
   {
+    id: "scarlet",
+    title: "The Red-Haired Rebel",
+    tagline: "Strategic, composed, fierce.",
+    src: scarletSprite,
+    width: 250,
+    height: 250,
+    frames: 1,
+  },
+  {
+    id: "iris",
+    title: "The Pink-Ponytail Explorer",
+    tagline: "Optimistic, expressive, deeply empathetic.",
+    src: walkerSprite,
+    width: 250,
+    height: 250,
+    frames: 1,
+  },
+  {
     id: "jade",
-    title: "The Peacemaker",
-    tagline: "Silver braid and a green dress — brings people together to grow change from the roots up.",
+    title: "The Emerald Guardian",
+    tagline: "Cool, observant, grounded.",
     src: jadeSprite,
     width: 250,
     height: 250,
@@ -77,4 +77,4 @@ export const AVATARS: AvatarLook[] = [
   },
 ];
 
-export const DEFAULT_AVATAR: Avatar = nameAvatar(AVATARS[0]!, FALLBACK_HERO_NAME);
+export const DEFAULT_AVATAR: Avatar = nameAvatar(AVATARS.find((avatar) => avatar.id === "iris")!, "IRIS");

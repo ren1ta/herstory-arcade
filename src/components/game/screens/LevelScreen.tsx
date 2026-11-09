@@ -107,6 +107,7 @@ export function LevelScreen({ level, avatar, onChoose }: LevelScreenProps) {
         {phase === "avatar" && (
           <div className="pixel-frame animate-pop-in min-h-28 bg-lavender-night px-4 py-3">
             <p className="font-pixel text-[10px] text-neon-pink">{avatar.name}</p>
+            <p className="font-pixel mt-1 text-[8px] text-neon-gold">{avatar.tagline}</p>
             <p className="font-terminal mt-2 min-h-14 whitespace-pre-wrap text-2xl leading-snug text-cream sm:text-3xl">
               {avatarTyped.shown}
               {!avatarTyped.done && <span className="animate-blink text-neon-cyan">█</span>}
