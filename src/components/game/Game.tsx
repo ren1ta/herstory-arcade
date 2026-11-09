@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useReducer } from "react";
-import { DEFAULT_AVATAR, type Avatar } from "@/game/avatars";
+import { DEFAULT_AVATAR, type AvatarLook } from "@/game/avatars";
 import { LEVELS, getAct, type ChoiceKey } from "@/game/story";
 import {
   MAX_STARS,
@@ -36,7 +36,10 @@ export function Game() {
     preloadSounds();
     dispatch({ type: "START" });
   }, []);
-  const selectAvatar = useCallback((a: Avatar) => dispatch({ type: "SELECT_AVATAR", avatar: a }), []);
+  const selectAvatar = useCallback(
+    (look: AvatarLook, name: string) => dispatch({ type: "SELECT_AVATAR", look, name }),
+    [],
+  );
   const cinematicDone = useCallback(() => dispatch({ type: "CINEMATIC_DONE" }), []);
   const arrivalDone = useCallback(() => dispatch({ type: "ARRIVAL_DONE" }), []);
   const beginAct = useCallback(() => dispatch({ type: "BEGIN_ACT" }), []);

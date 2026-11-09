@@ -1,4 +1,4 @@
-import type { Avatar } from "./avatars";
+import { nameAvatar, type Avatar, type AvatarLook } from "./avatars";
 import { ACTS, LEVELS, LEVELS_PER_ACT, type ChoiceKey } from "./story";
 
 export type Screen =
@@ -28,7 +28,7 @@ export interface GameState {
 
 export type GameAction =
   | { type: "START" }
-  | { type: "SELECT_AVATAR"; avatar: Avatar }
+  | { type: "SELECT_AVATAR"; look: AvatarLook; name: string }
   | { type: "CINEMATIC_DONE" }
   | { type: "ARRIVAL_DONE" }
   | { type: "BEGIN_ACT" }
@@ -63,7 +63,9 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
     case "START":
       return state.screen === "title" ? { ...state, screen: "select" } : state;
     case "SELECT_AVATAR":
-      return { ...state, avatar: action.avatar, screen: "cinematic" };
+      return state.screen === "select"
+        ? { ...state, avatar: nameAvatar(action.look, action.name), screen: "cinematic" }
+        : state;
     case "CINEMATIC_DONE":
       return state.screen === "cinematic" ? { ...state, screen: "arrival", levelIndex: 0 } : state;
     case "ARRIVAL_DONE":

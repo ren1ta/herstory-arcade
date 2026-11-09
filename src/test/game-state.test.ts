@@ -20,7 +20,7 @@ function wrongKey(i: number): ChoiceKey {
 function toFirstLevel(): GameState {
   let s = initialState();
   s = gameReducer(s, { type: "START" });
-  s = gameReducer(s, { type: "SELECT_AVATAR", avatar: AVATARS[0]! });
+  s = gameReducer(s, { type: "SELECT_AVATAR", look: AVATARS[0]!, name: "Renita" });
   s = gameReducer(s, { type: "CINEMATIC_DONE" });
   expect(s.screen).toBe("arrival");
   s = gameReducer(s, { type: "ARRIVAL_DONE" });
