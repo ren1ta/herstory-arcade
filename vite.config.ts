@@ -24,6 +24,8 @@ export default defineConfig({
       injectRegister: null,
       manifest: false,
       filename: "sw.js",
+      // TanStack Start writes browser files to dist/client; the worker must be served from there.
+      outDir: "dist/client",
       devOptions: { enabled: false },
       workbox: {
         skipWaiting: true,
