@@ -36,3 +36,5 @@ use the editor.
 - Living-room positions live in `ROOM` in `LivingRoomStage.tsx`; the couch front is re-drawn over the actor via clip-path. Why: makes a seated sprite sink into the cushions instead of floating.
 - Sound effects are static MP3s in `public/audio/` played through `playSound()` only. Why: one place enforces the user's SFX toggle and volume.
 - Never combine custom text-effect utilities named `text-*` with `cn()`; name them without the `text-` prefix. Why: tailwind-merge treats them as colours and drops the real colour class.
+- Offline play uses `vite-plugin-pwa` (generateSW, output in `dist/client`, NetworkFirst for pages); the service worker is registered only from `src/lib/offline.ts`, which refuses dev/iframe/preview hosts and supports `?sw=off`. Why: offline must never serve stale code in the Lovable preview.
+- Fonts are self-hosted in `public/fonts` (no Google Fonts link). Why: the game must look right with no internet.
